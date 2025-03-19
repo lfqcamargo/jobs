@@ -19,7 +19,6 @@ class UserMapper:
         Returns:
             User: A domain entity representing the user.
         """
-        print(raw)
         dto = CreateUserDTO(
             name=raw.name,
             email=raw.email,
@@ -28,3 +27,22 @@ class UserMapper:
             identifier=raw.id,
         )
         return User.create(dto)
+
+    @staticmethod
+    def to_sql(user: User) -> UserModel:
+        """
+        Converts a User domain entity to a UserModel instance for database persistence.
+
+        Args:
+            user (User): The domain entity representing a user.
+
+        Returns:
+            UserModel: A database model instance representing the user.
+        """
+        return UserModel(
+            id=user.identifier,
+            name=user.name,
+            email=user.email,
+            password=user.password,
+            birthday_date=user.birthday_date,
+        )

@@ -18,3 +18,18 @@ class UsersRepositoryInterface(ABC):
         Returns:
             User | None: The user instance if found, otherwise None.
         """
+
+    @abstractmethod
+    def create(self, user: User) -> None:
+        """
+        Persists a new user in the database.
+
+        This method takes a domain entity representing a user and saves it in the database.
+        Implementations should handle the persistence logic, ensuring the user data is stored correctly.
+
+        Args:
+            user (User): The domain entity representing the user to be stored.
+
+        Returns:
+            None
+        """

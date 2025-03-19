@@ -31,3 +31,9 @@ class UsersRepository(UsersRepositoryInterface):
             if user_model:
                 return UserMapper.to_domain(user_model)
             return None
+
+    def create(self, user: User) -> None:
+        with self.__db_connection as database:
+            user_model = UserMapper.to_sql(user)
+            database.session.add(user_model)
+            database.session.commit()

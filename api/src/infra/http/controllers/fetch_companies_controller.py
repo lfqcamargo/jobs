@@ -6,10 +6,7 @@ from src.infra.http.presenters.company_presenter import CompanyPresenter
 
 class FetchCompaniesController:
     """
-    Controller responsible for handling the process of fetching companies.
-
-    This class interacts with the FetchCompaniesService to retrieve a list of companies
-    and formats the output using the CompanyPresenter.
+    Controller responsible for handling user creation requests.
     """
 
     def __init__(self, service: FetchCompaniesService) -> None:
