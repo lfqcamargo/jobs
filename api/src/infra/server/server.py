@@ -4,6 +4,7 @@ from flask_cors import CORS
 from src.infra.database.postgres.settings.connection import db_connection_handler
 from src.infra.http.routes.company_routes import company_route_bp
 from src.infra.http.routes.jobs_routes import job_route_bp
+from src.infra.scripts.init_data_database import init_data_database
 
 
 def create_app() -> Flask:
@@ -11,6 +12,7 @@ def create_app() -> Flask:
     Init App
     """
     db_connection_handler.connect_to_db()
+    init_data_database(db_connection_handler)
 
     app = Flask(__name__)
     CORS(app)
