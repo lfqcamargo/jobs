@@ -13,13 +13,15 @@ from src.domain.jobs.application.services.fetch_companies_services import (
 
 def fetch_companies_composer() -> FetchCompaniesView:
     """
-    Composer function to create and return a RunLinkedin instance.
+    Composer function to create and return a FetchCompaniesView instance.
 
-    This function initializes the necessary dependencies, the CompaniesRepository,
-    User, and returns a fully constructed RunLinkedin instance.
+    This function initializes the necessary dependencies for fetching companies,
+    including the CompaniesRepository, FetchCompaniesService, FetchCompaniesController,
+    and FetchCompaniesView. It ties all components together to create a complete
+    view that can handle requests related to fetching companies.
 
     Returns:
-        RunLinkedin: The initialized RunLinkedin instance.
+        FetchCompaniesView: The initialized FetchCompaniesView instance, ready to handle HTTP requests.
     """
     companies_repository = CompaniesRepository(db_connection_handler)
     service = FetchCompaniesService(companies_repository)

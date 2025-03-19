@@ -22,7 +22,7 @@ from src.domain.users.application.interfaces.password_handler_interface import (
 )
 
 
-class RunLinkedin:
+class RunLinkedinService:
     """
     Class responsible for executing the LinkedIn access process.
 
