@@ -21,7 +21,8 @@ def fetch_companies_composer() -> FetchCompaniesView:
     view that can handle requests related to fetching companies.
 
     Returns:
-        FetchCompaniesView: The initialized FetchCompaniesView instance, ready to handle HTTP requests.
+        FetchCompaniesView: The initialized FetchCompaniesView instance, ready to handle
+        HTTP requests.
     """
     companies_repository = CompaniesRepository(db_connection_handler)
     service = FetchCompaniesService(companies_repository)

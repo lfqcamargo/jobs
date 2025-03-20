@@ -30,4 +30,3 @@ def init_data_database(db_handler: DBConnectionHandlerInterface) -> None:
 
             db.session.bulk_save_objects(companies)
             db.session.commit()
-            print("Dados de empresas iniciais inseridos com sucesso!")
