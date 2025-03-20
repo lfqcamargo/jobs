@@ -1,4 +1,3 @@
-from sqlalchemy.orm import relationship
 from sqlalchemy import Column, String, Integer, Date
 from src.infra.database.postgres.settings.base import Base
 
@@ -15,7 +14,3 @@ class UserModel(Base):
     email = Column(String(100), nullable=False)
     password = Column(String(300), nullable=False)
     birthday_date = Column(Date, nullable=False)
-
-    logs = relationship(
-        "LogsModel", back_populates="user", cascade="all, delete-orphan"
-    )

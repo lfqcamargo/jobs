@@ -11,7 +11,6 @@ from selenium.webdriver.support import expected_conditions as EC
 from src.domain.jobs.application.interfaces.companies_repository_interface import (
     CompaniesRepositoryInterface,
 )
-from src.core.errors.webdriver_error import WebdriverError
 from src.domain.users.application.interfaces.users_repository_interface import (
     UsersRepositoryInterface,
 )
@@ -65,19 +64,13 @@ class RunLinkedinService:
             self.__webdriver.get(self.__linkedin.get_link())
             self.__webdriver.maximize_window()
             time.sleep(2)
-        except Exception as e:
-            raise WebdriverError(
-                company_id=self.__linkedin.get_identifier(),
-                message="Error when trying to access the linkedin website",
-            ) from e
+        except Exception:
+            pass
 
     def __log_in(self) -> None:
         user = self.__get_user()
         if not user:
-            raise WebdriverError(
-                company_id=self.__linkedin.get_identifier(),
-                message="Error when trying to log in",
-            )
+            pass
 
         try:
             self.__webdriver.find_element(By.LINK_TEXT, "Entrar").click()
@@ -93,11 +86,8 @@ class RunLinkedinService:
             WebDriverWait(self.__webdriver, 600).until(
                 EC.presence_of_element_located((By.ID, "global-nav-search"))
             )
-        except Exception as e:
-            raise WebdriverError(
-                company_id=self.__linkedin.get_identifier(),
-                message="Error when trying to log in",
-            ) from e
+        except Exception:
+            pass
 
     def __access_jobs(self) -> None:
         try:
@@ -126,11 +116,8 @@ class RunLinkedinService:
         while True:
             try:
                 self.__jobs_simplified()
-            except Exception as e:
-                raise WebdriverError(
-                    company_id=self.__linkedin.get_identifier(),
-                    message="Error when trying to access the linkedin jobs simplified",
-                ) from e
+            except Exception:
+                pass
 
     def __jobs_simplified(self) -> None:
         self.__webdriver.find_element(
@@ -189,8 +176,8 @@ class RunLinkedinService:
                                 'button[data-control-name="discard_application_confirm_btn"]',
                             ).click()
                             continue
-                except Exception as e:
-                    print(e)
+                except Exception:
+                    pass
 
     def __apply_simplified(self) -> None:
         WebDriverWait(self.__webdriver, 10).until(

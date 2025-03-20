@@ -20,7 +20,6 @@ if config.config_file_name is not None:
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
 from src.infra.database.postgres.models.company_model import CompanyModel
-from src.infra.database.postgres.models.logs_model import LogsModel
 from src.infra.database.postgres.models.user_model import UserModel
 
 target_metadata = Base.metadata
