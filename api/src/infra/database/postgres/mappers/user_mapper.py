@@ -40,9 +40,9 @@ class UserMapper:
             UserModel: A database model instance representing the user.
         """
         return UserModel(
-            id=user.identifier,
-            name=user.name,
-            email=user.email,
-            password=user.password,
-            birthday_date=user.birthday_date,
+            id=user.get_identifier() if user.get_identifier() != 0 else None,
+            name=user.get_name(),
+            email=user.get_email(),
+            password=user.get_password(),
+            birthday_date=user.get_birthday_date(),
         )

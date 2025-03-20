@@ -99,4 +99,6 @@ class User(Entity):
         Returns:
             str: A formatted string containing user details.
         """
-        return f"ID: {self.__identifier}, name: {self.__name}, email: {self.__email}"
+        return (
+            f"ID: {self.get_identifier()}, name: {self.__name}, email: {self.__email}"
+        )

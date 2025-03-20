@@ -1,5 +1,5 @@
 from typing import Any
-from flask import Blueprint, jsonify, Response
+from flask import Blueprint, jsonify, Response, request
 from src.infra.http.views.http_types.http_request import HttpRequest
 from src.infra.http.composers.create_user_composer import create_user_composer
 from src.infra.errors.error_handler import handle_errors
@@ -20,7 +20,8 @@ def run_linkedin() -> tuple[Response, Any]:
         tuple[Response, Any]: A tuple containing the formatted JSON response and HTTP status code.
     """
     try:
-        http_request = HttpRequest()
+        body = request.json
+        http_request = HttpRequest(body=body)
         view = create_user_composer()
         http_response = view.handle(http_request)
 

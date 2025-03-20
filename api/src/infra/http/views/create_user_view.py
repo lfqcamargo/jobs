@@ -1,3 +1,4 @@
+from datetime import datetime
 from src.infra.http.controllers.create_user_controller import (
     CreateUserController,
 )
@@ -29,11 +30,15 @@ class CreateUserView(ViewInterface):
     def handle(self, http_request: HttpRequest) -> HttpResponse:
         create_user_validator(http_request)
 
+        birthday_date = datetime.strptime(
+            http_request.body["birthday_date"], "%d/%m/%Y"
+        ).date()
+
         dto = CreateUserDTO(
-            name=http_request.name,
-            email=http_request.email,
-            password=http_request.password,
-            birthday_date=http_request.birthday_date,
+            name=http_request.body["name"],
+            email=http_request.body["email"],
+            password=http_request.body["password"],
+            birthday_date=birthday_date,
         )
 
         body_response = self.__controller.handle(dto)
