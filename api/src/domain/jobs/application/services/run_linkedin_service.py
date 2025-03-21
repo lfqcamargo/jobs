@@ -1,5 +1,4 @@
 import time
-import os
 from selenium import webdriver
 
 from selenium.webdriver.common.by import By
@@ -47,15 +46,16 @@ class RunLinkedinService:
         self.__companies_repository = companies_repository
         self.__user_repository = user_repository
         self.__password_handler = password_handler
-        self.__webdriver = webdriver.Chrome()
+        self.__webdriver = None
         self.__linkedin = self.__companies_repository.find_by_name("Linkedin")
 
-    def execute(self) -> None:
+    def execute(self, email: str) -> None:
         """
         Executes the LinkedIn access process.
         """
+        self.__webdriver = webdriver.Chrome()
         self.__access_website()
-        self.__log_in()
+        self.__log_in(email)
         self.__access_jobs()
         self.__find_jobs()
 
@@ -67,8 +67,8 @@ class RunLinkedinService:
         except Exception:
             pass
 
-    def __log_in(self) -> None:
-        user = self.__get_user()
+    def __log_in(self, email: str) -> None:
+        user = self.__get_user(email)
         if not user:
             pass
 
@@ -261,5 +261,5 @@ class RunLinkedinService:
             ".scaffold-layout__list > div > ul > li",
         )
 
-    def __get_user(self) -> User:
-        return self.__user_repository.find_by_email(os.getenv("EMAIL"))
+    def __get_user(self, email: str) -> User:
+        return self.__user_repository.find_by_email(email)

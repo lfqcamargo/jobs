@@ -1,5 +1,6 @@
 from flask import jsonify
 from pydantic import ValidationError
+from .error_types.http_validation_param import HttpValidationParamError
 from src.core.errors.already_exists_error import AlreadyExistsError
 from src.core.errors.resource_not_found_error import ResourNotFoundError
 from src.core.errors.wrong_credentials import WrongCredentialsError
@@ -57,6 +58,13 @@ def error_middleware(error: Exception) -> HttpResponse:
                     for e in error.errors()
                 ]
             },
+        )
+        return jsonify(response.body), response.status_code
+
+    if isinstance(error, HttpValidationParamError):
+        response = HttpResponse(
+            status_code=error.status_code,
+            body={"errors": error.message},
         )
         return jsonify(response.body), response.status_code
 

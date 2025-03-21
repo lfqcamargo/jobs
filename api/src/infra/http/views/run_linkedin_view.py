@@ -4,6 +4,7 @@ from src.infra.http.controllers.run_linkedin_controller import (
 from src.infra.http.views.http_types.http_request import HttpRequest
 from src.infra.http.views.http_types.http_response import HttpResponse
 from .interfaces.view_interface import ViewInterface
+from ..validators.run_linkedin_validator import validate_request_params
 
 
 class RunLinkedinView(ViewInterface):
@@ -24,6 +25,9 @@ class RunLinkedinView(ViewInterface):
         """
         self.__controller = controller
 
-    def handle(self, _: HttpRequest) -> HttpResponse:
-        body_response = self.__controller.handle()
+    def handle(self, http_request: HttpRequest) -> HttpResponse:
+        validate_request_params(http_request)
+
+        email = http_request.param
+        body_response = self.__controller.handle(email)
         return HttpResponse(status_code=200, body=body_response)

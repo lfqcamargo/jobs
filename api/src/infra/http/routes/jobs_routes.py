@@ -1,12 +1,12 @@
 from typing import Any
-from flask import Blueprint, jsonify, Response
+from flask import Blueprint, jsonify, Response, request
 from src.infra.http.views.http_types.http_request import HttpRequest
 from src.infra.http.composers.run_linkedin_composer import run_linkedin_composer
 
 job_route_bp = Blueprint("jobs_routes", __name__)
 
 
-@job_route_bp.route("/jobs", methods=["GET"])
+@job_route_bp.route("/jobs", methods=["POST"])
 def run_linkedin() -> tuple[Response, Any]:
     """
     Endpoint to trigger LinkedIn automation tasks.
@@ -22,7 +22,9 @@ def run_linkedin() -> tuple[Response, Any]:
         tuple[Response, Any]: A tuple containing the formatted JSON response and HTTP status code.
     """
 
-    http_request = HttpRequest()
+    email = request.args.get("email")
+
+    http_request = HttpRequest(params={"email": email})
     view = run_linkedin_composer()
     http_response = view.handle(http_request)
 

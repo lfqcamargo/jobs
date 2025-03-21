@@ -18,7 +18,7 @@ class RunLinkedinController:
         """
         self.__service = service
 
-    def handle(self) -> None:
+    def handle(self, email: str) -> None:
         """
         Handles the execution of the RunLinkedinService.
 
@@ -28,4 +28,4 @@ class RunLinkedinController:
         Returns:
             None: This method does not return any value.
         """
-        self.__service.execute()
+        self.__service.execute(email)
