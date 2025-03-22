@@ -25,11 +25,26 @@ class UsersRepositoryInterface(ABC):
         Persists a new user in the database.
 
         This method takes a domain entity representing a user and saves it in the database.
-        Implementations should handle the persistence logic, ensuring the user data is stored correctly.
+        Implementations should handle the persistence logic, ensuring the user data is stored
+        correctly.
 
         Args:
             user (User): The domain entity representing the user to be stored.
 
         Returns:
             None
+        """
+
+    @abstractmethod
+    def fetch_all(self) -> list[User] | None:
+        """
+        Retrieves all users from the database.
+
+        This method queries the database and returns a list of all user entities stored.
+        The implementation should handle the retrieval logic, ensuring that the list of users
+        is accurate and complete.
+
+        Returns:
+            list[User] | None: A list of User objects representing all users in the database
+            or None.
         """

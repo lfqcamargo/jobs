@@ -21,6 +21,12 @@ class UsersRepository(UsersRepositoryInterface):
     def __init__(self, db_connection: DBConnectionHandlerInterface) -> None:
         self.__db_connection = db_connection
 
+    def create(self, user: User) -> None:
+        with self.__db_connection as database:
+            user_model = UserMapper.to_sql(user)
+            database.session.add(user_model)
+            database.session.commit()
+
     def find_by_email(self, email: str) -> User | None:
         with self.__db_connection as database:
             user_model = (
@@ -32,8 +38,14 @@ class UsersRepository(UsersRepositoryInterface):
                 return UserMapper.to_domain(user_model)
             return None
 
-    def create(self, user: User) -> None:
+    def fetch_all(self) -> list[User] | None:
         with self.__db_connection as database:
-            user_model = UserMapper.to_sql(user)
-            database.session.add(user_model)
-            database.session.commit()
+            user_model = database.session.query(UserModel).all()
+            if user_model:
+                users = []
+                for user in user_model:
+                    users.append(UserMapper.to_domain(user))
+
+                return users
+
+            return None
