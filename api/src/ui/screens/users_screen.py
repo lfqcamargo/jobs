@@ -11,15 +11,9 @@ class TableFrame(ctk.CTkScrollableFrame):
     def __init__(self, master, **kwargs) -> None:
         super().__init__(master, **kwargs)
 
-        self.grid_rowconfigure(0, weight=0)
-        self.grid_rowconfigure(1, weight=1)
-        self.grid_columnconfigure(0, weight=1)
-        self.grid_columnconfigure(1, weight=1)
-        self.grid_columnconfigure(2, weight=1)
-
         users = fetch_users_composer().execute()
         self.header = self.create_table_header()
-        self.header.grid(row=0, column=0, columnspan=3, padx=5, pady=10, sticky="nsew")
+        self.header.grid(row=0, column=0, columnspan=4, padx=5, pady=10, sticky="nsew")
 
         self.display_users(users)
 
@@ -28,19 +22,30 @@ class TableFrame(ctk.CTkScrollableFrame):
         Creates a header for the table with column names.
         """
         header_frame = ctk.CTkFrame(self)
-        ctk.CTkLabel(header_frame, text="Nome", font=("Arial", 16, "bold")).grid(
-            row=0, column=0, padx=5, pady=5
-        )
-        ctk.CTkLabel(header_frame, text="Email", font=("Arial", 16, "bold")).grid(
-            row=0, column=1, padx=5, pady=5
-        )
-        ctk.CTkLabel(
-            header_frame, text="Data de Anivsersário", font=("Arial", 16, "bold")
-        ).grid(row=0, column=2, padx=5, pady=5)
 
-        ctk.CTkLabel(header_frame, text="", font=("Arial", 16, "bold")).grid(
-            row=0, column=2, padx=5, pady=5
-        )
+        header_frame.columnconfigure(0, weight=1, minsize=250)
+        header_frame.columnconfigure(1, weight=1, minsize=250)
+        header_frame.columnconfigure(2, weight=1, minsize=100)
+        header_frame.columnconfigure(3, weight=1, minsize=100)
+
+        ctk.CTkLabel(
+            header_frame, text="Nome", font=("Arial", 14, "bold"), anchor="w"
+        ).grid(row=0, column=0, padx=5, pady=5)
+        ctk.CTkLabel(
+            header_frame, text="Email", font=("Arial", 14, "bold"), anchor="w"
+        ).grid(row=0, column=1, padx=5, pady=5)
+
+        ctk.CTkLabel(
+            header_frame, text="Nascimento", font=("Arial", 14, "bold"), anchor="e"
+        ).grid(row=0, column=2, padx=5, pady=5, sticky="e")
+
+        ctk.CTkButton(
+            header_frame,
+            text="+",
+            font=("Arial", 14, "bold"),
+            width=50,
+            fg_color="green",
+        ).grid(row=0, column=3, padx=5, pady=5, sticky="e")
 
         return header_frame
 
@@ -51,27 +56,38 @@ class TableFrame(ctk.CTkScrollableFrame):
         if users:
             for index, user in enumerate(users, start=1):
                 user_frame = ctk.CTkFrame(self)
+
+                user_frame.columnconfigure(0, weight=1, minsize=300)
+                user_frame.columnconfigure(1, weight=1, minsize=250)
+                user_frame.columnconfigure(2, weight=1, minsize=100)
+                user_frame.columnconfigure(3, weight=1, minsize=100)
+                user_frame.columnconfigure(3, weight=1, minsize=100)
+
                 user_frame.grid(
-                    row=index, column=0, columnspan=4, padx=5, pady=5, sticky="nsew"
+                    row=index, column=0, columnspan=4, padx=5, pady=5, sticky="w"
                 )
 
                 ctk.CTkLabel(user_frame, text=user.get_name(), font=("Arial", 12)).grid(
-                    row=0, column=0, padx=5, pady=5
+                    row=0, column=0, padx=5, pady=5, sticky="w"
                 )
 
                 ctk.CTkLabel(
                     user_frame, text=user.get_email(), font=("Arial", 12)
-                ).grid(row=0, column=1, padx=5, pady=5)
+                ).grid(row=0, column=1, padx=5, pady=5, sticky="w")
 
                 ctk.CTkLabel(
-                    user_frame, text=user.get_birthday_date(), font=("Arial", 12)
+                    user_frame,
+                    text=user.get_birthday_date().strftime("%d/%m/%Y"),
+                    font=("Arial", 12),
                 ).grid(row=0, column=2, padx=5, pady=5)
 
-                # action_button = ctk.CTkButton(
-                #     user_frame,
-                #     text="View",
-                # )
-                # action_button.grid(row=0, column=2, padx=5, pady=5)
+                ctk.CTkButton(user_frame, text="/", font=("Arial", 12), width=50).grid(
+                    row=0, column=3, padx=5, pady=5, sticky="e"
+                )
+
+                ctk.CTkButton(
+                    user_frame, text="E", font=("Arial", 12), width=50, fg_color="red"
+                ).grid(row=0, column=4, padx=5, pady=5, sticky="e")
 
 
 class UserScreen(ctk.CTkToplevel):
@@ -81,12 +97,12 @@ class UserScreen(ctk.CTkToplevel):
 
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
-        self.geometry("800x600")
+        self.geometry("600X500")
         self.title("Usuários")
         self.grab_set()
 
         self.label = ctk.CTkLabel(self, text="Usuários")
         self.label.grid(row=0, column=0, padx=5, pady=5, sticky="nsew")
 
-        self.table_frame = TableFrame(master=self, width=600)
+        self.table_frame = TableFrame(master=self, width=900)
         self.table_frame.grid(row=1, column=0, padx=20, pady=40, sticky="nsew")
