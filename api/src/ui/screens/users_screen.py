@@ -10,6 +10,7 @@ from src.domain.users.enterprise.entities.user import User
 from src.infra.desktop.composers.fetch_users_composer import fetch_users_composer
 from src.infra.desktop.composers.create_user_composer import create_user_composer
 from src.infra.desktop.composers.delete_user_composer import delete_user_composer
+from src.infra.desktop.composers.edit_user_composer import edit_user_composer
 from .confirmation_screen import ConfirmationScreen
 from ..components.button import Button
 from ..components.label import Label
@@ -219,7 +220,20 @@ class TableFrame(ctk.CTkScrollableFrame):
                 else:
                     messagebox.showerror("Error", "Erro Interno.")
         else:
-            pass
+            try:
+                edit_user_composer().handle(
+                    identifier,
+                    user_frame.name.get(),
+                    user_frame.email.get(),
+                    user_frame.birthday_date.get(),
+                    user_frame.password.get(),
+                )
+                messagebox.showinfo("Usuário", "Usuário alterado com sucesso.")
+            except Exception as e:
+                if isinstance(e, ValidationError):
+                    messagebox.showerror("Error", str(e), parent=self)
+                else:
+                    messagebox.showerror("Error", "Erro Interno.")
 
 
 class UserScreen(ctk.CTkToplevel):

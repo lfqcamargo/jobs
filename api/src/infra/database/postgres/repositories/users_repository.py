@@ -21,11 +21,15 @@ class UsersRepository(UsersRepositoryInterface):
     def __init__(self, db_connection: DBConnectionHandlerInterface) -> None:
         self.__db_connection = db_connection
 
-    def create(self, user: User) -> None:
+    def create(self, user: User) -> bool:
         with self.__db_connection as database:
             user_model = UserMapper.to_sql(user)
-            database.session.add(user_model)
-            database.session.commit()
+            try:
+                database.session.add(user_model)
+                database.session.commit()
+                return True
+            except Exception:
+                return False
 
     def find_by_email(self, email: str) -> User | None:
         with self.__db_connection as database:
@@ -60,6 +64,16 @@ class UsersRepository(UsersRepositoryInterface):
                 return users
 
             return None
+
+    def save(self, user: User) -> bool:
+        with self.__db_connection as database:
+            user_model = UserMapper.to_sql(user)
+            try:
+                database.session.merge(user_model)
+                database.session.commit()
+                return True
+            except Exception:
+                return False
 
     def delete(self, identifier: int) -> bool:
         """

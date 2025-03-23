@@ -11,7 +11,7 @@ class UsersRepositoryInterface(ABC):
     """
 
     @abstractmethod
-    def create(self, user: User) -> None:
+    def create(self, user: User) -> bool:
         """
         Persists a new user in the database.
 
@@ -23,7 +23,7 @@ class UsersRepositoryInterface(ABC):
             user (User): The domain entity representing the user to be stored.
 
         Returns:
-            None
+            bool
         """
 
     @abstractmethod
@@ -56,6 +56,22 @@ class UsersRepositoryInterface(ABC):
         Returns:
             list[User] | None: A list of User objects representing all users in the database
             or None.
+        """
+
+    @abstractmethod
+    def save(self, user: User) -> bool:
+        """
+        Persists a new user in the database.
+
+        This method takes a domain entity representing a user and saves it in the database.
+        Implementations should handle the persistence logic, ensuring the user data is stored
+        correctly.
+
+        Args:
+            user (User): The domain entity representing the user to be stored.
+
+        Returns:
+            bool
         """
 
     @abstractmethod

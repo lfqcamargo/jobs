@@ -1,4 +1,5 @@
 from src.core.errors.already_exists_error import AlreadyExistsError
+from src.core.errors.error_server import ErrorServer
 from src.domain.users.application.interfaces.password_handler_interface import (
     PasswordHandlerInterface,
 )
@@ -46,9 +47,14 @@ class CreateUserService:
         user_email = self.__users_repository.find_by_email(props.email)
 
         if user_email is not None:
-            raise AlreadyExistsError(message="Email already exists.", field="email")
+            raise AlreadyExistsError(message="Email já cadastrado.", field="email")
 
         props.password = self.__password_handler.encrypt_password(props.password)
 
         user = User.create(props)
-        return self.__users_repository.create(user)
+        result = self.__users_repository.create(user)
+
+        if result is False:
+            return ErrorServer(message="Erro ao tentar atualizar banco de dados.")
+
+        return None

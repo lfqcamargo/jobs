@@ -44,6 +44,15 @@ class User(Entity):
         """
         return self.__name
 
+    def set_name(self, name: str) -> None:
+        """
+        Set the user's name.
+
+        Args:
+            name (str): The name to be set for the user.
+        """
+        self.__name = name
+
     def get_email(self) -> str:
         """
         Retrieve the user's email.
@@ -52,6 +61,15 @@ class User(Entity):
             str: The email of the user.
         """
         return self.__email
+
+    def set_email(self, email: str) -> None:
+        """
+        Set the user's email.
+
+        Args:
+            email (str): The email to be set for the user.
+        """
+        self.__email = email
 
     def get_password(self) -> str:
         """
@@ -62,6 +80,15 @@ class User(Entity):
         """
         return self.__password
 
+    def set_password(self, password: str) -> None:
+        """
+        Set the user's password.
+
+        Args:
+            password (str): The password to be set for the user.
+        """
+        self.__password = password
+
     def get_birthday_date(self) -> date:
         """
         Retrieve the user's birthday date.
@@ -70,6 +97,15 @@ class User(Entity):
             date: The birthday date of the user.
         """
         return self.__birthday_date
+
+    def set_birthday_date(self, birthday_date: date) -> None:
+        """
+        Set the user's birthday date.
+
+        Args:
+            birthday_date (date): The birthday date to be set for the user.
+        """
+        self.__birthday_date = birthday_date
 
     @staticmethod
     def create(props: CreateUserDTO) -> "User":
