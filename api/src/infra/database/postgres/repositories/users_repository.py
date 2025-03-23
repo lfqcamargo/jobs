@@ -38,6 +38,17 @@ class UsersRepository(UsersRepositoryInterface):
                 return UserMapper.to_domain(user_model)
             return None
 
+    def find_by_identifier(self, identifier: int) -> User | None:
+        with self.__db_connection as database:
+            user_model = (
+                database.session.query(UserModel)
+                .filter(UserModel.id == identifier)
+                .first()
+            )
+            if user_model:
+                return UserMapper.to_domain(user_model)
+            return None
+
     def fetch_all(self) -> list[User] | None:
         with self.__db_connection as database:
             user_model = database.session.query(UserModel).all()
@@ -49,3 +60,30 @@ class UsersRepository(UsersRepositoryInterface):
                 return users
 
             return None
+
+    def delete(self, identifier: int) -> bool:
+        """
+        Deletes a user by identifier from the database.
+
+        Args:
+            identifier (int): The identifier of the user to be deleted.
+
+        Returns:
+            bool: True if the user was successfully deleted, False otherwise.
+        """
+        with self.__db_connection as database:
+            user_model = (
+                database.session.query(UserModel)
+                .filter(UserModel.id == identifier)
+                .first()
+            )
+
+            if user_model:
+                try:
+                    database.session.delete(user_model)
+                    database.session.commit()
+                    return True
+                except Exception:
+                    database.session.rollback()
+                    return False
+            return False

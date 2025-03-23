@@ -1,6 +1,38 @@
+from tkinter import StringVar
+from tkinter import messagebox
 import customtkinter as ctk
+from pydantic import ValidationError
+
+
+from src.core.errors.resource_not_found_error import ResourNotFoundError
+from src.core.errors.error_server import ErrorServer
 from src.domain.users.enterprise.entities.user import User
 from src.infra.desktop.composers.fetch_users_composer import fetch_users_composer
+from src.infra.desktop.composers.create_user_composer import create_user_composer
+from src.infra.desktop.composers.delete_user_composer import delete_user_composer
+from .confirmation_screen import ConfirmationScreen
+from ..components.button import Button
+from ..components.label import Label
+
+
+class FrameUser(ctk.CTkFrame):
+    def __init__(
+        self,
+        *args,
+        identifier: int,
+        name: StringVar,
+        email: StringVar,
+        birthday_date: StringVar,
+        password: StringVar,
+        **kwargs
+    ) -> None:
+        super().__init__(*args, **kwargs)
+
+        self.identifier = identifier
+        self.name = name
+        self.email = email
+        self.birthday_date = birthday_date
+        self.password = password
 
 
 class TableFrame(ctk.CTkScrollableFrame):
@@ -10,84 +42,184 @@ class TableFrame(ctk.CTkScrollableFrame):
 
     def __init__(self, master, **kwargs) -> None:
         super().__init__(master, **kwargs)
+        self.__row = 0
 
-        users = fetch_users_composer().execute()
-        self.header = self.create_table_header()
+        self.header = self.__create_table_header()
         self.header.grid(row=0, column=0, columnspan=4, padx=5, pady=10, sticky="nsew")
 
-        self.display_users(users)
+        self.__init_users()
 
-    def create_table_header(self) -> ctk.CTkFrame:
+    def __create_table_header(self) -> ctk.CTkFrame:
         """
         Creates a header for the table with column names.
         """
         header_frame = ctk.CTkFrame(self)
 
-        header_frame.columnconfigure(0, weight=1, minsize=250)
-        header_frame.columnconfigure(1, weight=1, minsize=250)
-        header_frame.columnconfigure(2, weight=1, minsize=100)
-        header_frame.columnconfigure(3, weight=1, minsize=100)
+        Label(header_frame, text="Nome", types="h2", anchor="w", width=350).grid(
+            row=0, column=0, padx=5, pady=5, sticky="w"
+        )
 
-        ctk.CTkLabel(
-            header_frame, text="Nome", font=("Arial", 14, "bold"), anchor="w"
-        ).grid(row=0, column=0, padx=5, pady=5)
-        ctk.CTkLabel(
-            header_frame, text="Email", font=("Arial", 14, "bold"), anchor="w"
-        ).grid(row=0, column=1, padx=5, pady=5)
+        Label(
+            header_frame,
+            text="Email",
+            types="h2",
+            anchor="w",
+            width=350,
+        ).grid(row=0, column=1, padx=5, pady=5, sticky="w")
 
-        ctk.CTkLabel(
-            header_frame, text="Nascimento", font=("Arial", 14, "bold"), anchor="e"
-        ).grid(row=0, column=2, padx=5, pady=5, sticky="e")
+        Label(
+            header_frame,
+            text="Nascimento",
+            types="h2",
+            anchor="w",
+            width=90,
+        ).grid(row=0, column=2, padx=5, pady=5, sticky="w")
 
-        ctk.CTkButton(
+        Label(
+            header_frame,
+            text="Senha",
+            types="h2",
+            anchor="w",
+            width=200,
+        ).grid(row=0, column=3, padx=5, pady=5, sticky="w")
+
+        Button(
             header_frame,
             text="+",
-            font=("Arial", 14, "bold"),
+            types="accept",
             width=50,
-            fg_color="green",
-        ).grid(row=0, column=3, padx=5, pady=5, sticky="e")
+            command=lambda: self.__add_user(None),
+        ).grid(row=0, column=4, padx=5, pady=5, sticky="e")
 
         return header_frame
 
-    def display_users(self, users: list[User]) -> None:
-        """
-        Displays the list of users in the table-like format.
-        """
-        if users:
-            for index, user in enumerate(users, start=1):
-                user_frame = ctk.CTkFrame(self)
+    def __init_users(self) -> None:
+        try:
+            users = fetch_users_composer().handle()
+            for user in users:
+                self.__add_user(user)
+        except Exception as e:
+            if isinstance(e, ErrorServer):
+                messagebox.showerror("Error", str(e), parent=self)
 
-                user_frame.columnconfigure(0, weight=1, minsize=300)
-                user_frame.columnconfigure(1, weight=1, minsize=250)
-                user_frame.columnconfigure(2, weight=1, minsize=100)
-                user_frame.columnconfigure(3, weight=1, minsize=100)
-                user_frame.columnconfigure(3, weight=1, minsize=100)
+    def __add_user(self, user: User = None) -> None:
+        self.__row += 1
 
-                user_frame.grid(
-                    row=index, column=0, columnspan=4, padx=5, pady=5, sticky="w"
+        if user:
+            identifier = user.get_identifier()
+            name = StringVar()
+            name.set(user.get_name())
+
+            email = StringVar()
+            email.set(user.get_email())
+
+            birthday_date = StringVar()
+            birthday_date.set(user.get_birthday_date().strftime("%d/%m/%Y"))
+            birthday_str = birthday_date.get()
+        else:
+            identifier = 0
+            name = StringVar()
+            name.set("")
+            email = StringVar()
+            email.set("")
+            birthday_date = StringVar()
+            birthday_date.set("")
+
+        password = StringVar()
+
+        user_frame = FrameUser(
+            self,
+            identifier=identifier,
+            name=name,
+            email=email,
+            birthday_date=birthday_date,
+            password=password,
+        )
+
+        user_frame.grid(
+            row=self.__row, column=0, columnspan=4, padx=5, pady=5, sticky="w"
+        )
+
+        ctk.CTkEntry(user_frame, textvariable=name, font=("Arial", 12), width=350).grid(
+            row=0, column=0, padx=5, pady=5, sticky="w"
+        )
+
+        ctk.CTkEntry(
+            user_frame, textvariable=email, font=("Arial", 12), width=350
+        ).grid(row=0, column=1, padx=5, pady=5, sticky="w")
+
+        ctk.CTkEntry(
+            user_frame,
+            textvariable=birthday_date,
+            font=("Arial", 12),
+            width=90,
+        ).grid(row=0, column=2, padx=5, pady=5)
+
+        ctk.CTkEntry(
+            user_frame,
+            textvariable=password,
+            font=("Arial", 12),
+            width=200,
+            show="*",
+        ).grid(row=0, column=3, padx=5, pady=5, sticky="w")
+
+        Button(
+            user_frame,
+            text="S",
+            width=50,
+            command=lambda: self.__save_user(user_frame),
+        ).grid(row=0, column=4, padx=5, pady=5, sticky="e")
+
+        Button(
+            user_frame,
+            text="E",
+            types="danger",
+            width=50,
+            command=lambda: self.__delete_user(user_frame),
+        ).grid(row=0, column=5, padx=5, pady=5, sticky="e")
+
+    def __delete_user(self, user_frame: ctk.CTkFrame) -> None:
+        identifier = getattr(user_frame, "identifier", 0)
+        if identifier > 0:
+            confirmation_screen = ConfirmationScreen(
+                self, "Usuário sera deletado, deseja continuar?"
+            )
+
+            self.wait_window(confirmation_screen)
+
+            if confirmation_screen.response is True:
+                try:
+                    delete_user_composer().handle(identifier)
+                    user_frame.destroy()
+                except Exception as e:
+                    if isinstance(e, ValidationError):
+                        messagebox.showerror("Error", str(e), parent=self)
+                    if isinstance(e, ResourNotFoundError):
+                        messagebox.showerror("Error", str(e), parent=self)
+                    else:
+                        messagebox.showerror("Error", "Erro Interno.")
+        else:
+            user_frame.destroy()
+
+    def __save_user(self, user_frame: FrameUser) -> None:
+        identifier = getattr(user_frame, "identifier", 0)
+
+        if identifier == 0:
+            try:
+                create_user_composer().handle(
+                    user_frame.name.get(),
+                    user_frame.email.get(),
+                    user_frame.birthday_date.get(),
+                    user_frame.password.get(),
                 )
-
-                ctk.CTkLabel(user_frame, text=user.get_name(), font=("Arial", 12)).grid(
-                    row=0, column=0, padx=5, pady=5, sticky="w"
-                )
-
-                ctk.CTkLabel(
-                    user_frame, text=user.get_email(), font=("Arial", 12)
-                ).grid(row=0, column=1, padx=5, pady=5, sticky="w")
-
-                ctk.CTkLabel(
-                    user_frame,
-                    text=user.get_birthday_date().strftime("%d/%m/%Y"),
-                    font=("Arial", 12),
-                ).grid(row=0, column=2, padx=5, pady=5)
-
-                ctk.CTkButton(user_frame, text="/", font=("Arial", 12), width=50).grid(
-                    row=0, column=3, padx=5, pady=5, sticky="e"
-                )
-
-                ctk.CTkButton(
-                    user_frame, text="E", font=("Arial", 12), width=50, fg_color="red"
-                ).grid(row=0, column=4, padx=5, pady=5, sticky="e")
+                messagebox.showinfo("Usuário", "Usuário criado com sucesso.")
+            except Exception as e:
+                if isinstance(e, ValidationError):
+                    messagebox.showerror("Error", str(e), parent=self)
+                else:
+                    messagebox.showerror("Error", "Erro Interno.")
+        else:
+            pass
 
 
 class UserScreen(ctk.CTkToplevel):
@@ -97,12 +229,11 @@ class UserScreen(ctk.CTkToplevel):
 
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
-        self.geometry("600X500")
+        self.geometry("1400x800")
         self.title("Usuários")
         self.grab_set()
 
-        self.label = ctk.CTkLabel(self, text="Usuários")
-        self.label.grid(row=0, column=0, padx=5, pady=5, sticky="nsew")
+        self.label = Label(self, text="Usuários", types="h1").pack(pady=10)
 
-        self.table_frame = TableFrame(master=self, width=900)
-        self.table_frame.grid(row=1, column=0, padx=20, pady=40, sticky="nsew")
+        self.table_frame = TableFrame(master=self, height=500, width=1300)
+        self.table_frame.pack(pady=20)

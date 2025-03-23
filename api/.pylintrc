@@ -25,6 +25,7 @@ disable=raw-checker-failed,
         R0913, #too-many-arguments
         R0917, #too-many-positional-arguments
         C0200, #consider-using-enumerate
+        R0901, #too-many-ancestors
 
 # Files or directories to be skipped. They should be base names, not paths.
 ignore=
