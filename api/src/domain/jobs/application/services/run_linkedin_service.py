@@ -18,6 +18,9 @@ from src.domain.users.enterprise.entities.user import User
 from src.domain.users.application.interfaces.password_handler_interface import (
     PasswordHandlerInterface,
 )
+from src.domain.users.application.interfaces.skills_repository_interface import (
+    SkillsRepositoryInterface,
+)
 
 
 class RunLinkedinService:
@@ -31,8 +34,9 @@ class RunLinkedinService:
     def __init__(
         self,
         companies_repository: CompaniesRepositoryInterface,
-        user_repository: UsersRepositoryInterface,
+        users_repository: UsersRepositoryInterface,
         password_handler: PasswordHandlerInterface,
+        skills_repository: SkillsRepositoryInterface,
     ) -> None:
         """
         Initializes the RunLinkedin process.
@@ -40,12 +44,14 @@ class RunLinkedinService:
         Args:
             companies_repository (CompaniesRepositoryInterface): The repository to
             retrieve company information.
-            user_repository (UsersRepositoryInterface): The repository to retrieve user information.
+            users_repository (UsersRepositoryInterface): The repository to retrieve user information.
             password_handler (PasswordHandlerInterface): Driver to manage user password.
+            skills_repository (SkillsRepositoryInterface): The repository to retrieve skill information.
         """
         self.__companies_repository = companies_repository
-        self.__user_repository = user_repository
+        self.__users_repository = users_repository
         self.__password_handler = password_handler
+        self.__skills_repository = skills_repository
         self.__webdriver = None
         self.__linkedin = self.__companies_repository.find_by_name("Linkedin")
 
@@ -165,8 +171,7 @@ class RunLinkedinService:
                         div_element.find_element(By.TAG_NAME, "div").click()
                         time.sleep(2)
                         try:
-                            pass
-                            # self.__apply_simplified()
+                            self.__apply_simplified()
                         except Exception:
                             self.__webdriver.find_element(
                                 By.CSS_SELECTOR, 'button[aria-label="Fechar"]'
@@ -245,7 +250,7 @@ class RunLinkedinService:
         time.sleep(2)
 
     def __get_input_response(self, label: str) -> any:
-        pass
+        print(label)
 
     def __get_list_pages(self) -> list[WebElement]:
         ul_paginator = self.__webdriver.find_element(
@@ -262,4 +267,4 @@ class RunLinkedinService:
         )
 
     def __get_user(self, email: str) -> User:
-        return self.__user_repository.find_by_email(email)
+        return self.__users_repository.find_by_email(email)
