@@ -7,8 +7,24 @@ class SkillsRepositoryInterface(ABC):
     Interface for the Skills Repository.
 
     This class defines the contract that any implementation of a Skills Repository
-    must follow. It provides methods to retrieve user data.
+    must follow. It provides methods to retrieve skill data.
     """
+
+    @abstractmethod
+    def create(self, skill: Skill) -> bool:
+        """
+        Persists a new skill in the database.
+
+        This method takes a domain entity representing a skill and saves it in the database.
+        Implementations should handle the persistence logic, ensuring the skill data is stored
+        correctly.
+
+        Args:
+            skill (Skill): The domain entity representing the skill to be stored.
+
+        Returns:
+            bool
+        """
 
     @abstractmethod
     def fetch_all(self) -> list[Skill] | None:
