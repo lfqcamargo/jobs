@@ -32,7 +32,7 @@ class CreateUserService:
         self.__users_repository = users_repository
         self.__password_handler = password_handler
 
-    def execute(self, props: CreateUserDTO) -> None:
+    def execute(self, props: CreateUserDTO) -> None | AlreadyExistsError | ErrorServer:
         """
         Executes the user creation process.
 
@@ -42,12 +42,12 @@ class CreateUserService:
             props (CreateUserDTO): The data transfer object containing user details.
 
         Returns:
-            None
+            None | AlreadyExistsError | ErrorServer
         """
         user_email = self.__users_repository.find_by_email(props.email)
 
         if user_email is not None:
-            raise AlreadyExistsError(message="Email já cadastrado.", field="email")
+            return AlreadyExistsError(message="Email já cadastrado.", field="email")
 
         props.password = self.__password_handler.encrypt_password(props.password)
 

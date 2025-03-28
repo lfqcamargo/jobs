@@ -12,7 +12,7 @@ class SkillModel(Base):
 
     id = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
     description = Column(String(255), nullable=False)
-    time_month = Column(Integer(3), nullable=False)
+    time_month = Column(Integer(), nullable=False)
     level = Column(Enum(SkillLevel), nullable=False)
 
     user_id = Column(

@@ -24,7 +24,7 @@ class DeleteUserService:
         """
         self.__users_repository = users_repository
 
-    def execute(self, identifier: int) -> None:
+    def execute(self, identifier: int) -> None | ResourNotFoundError:
         """
         Executes the user deletion process.
 
@@ -39,12 +39,12 @@ class DeleteUserService:
             ErrorServer: If an error occurs during the deletion process.
 
         Returns:
-            None
+            None | ResourNotFoundError
         """
         user = self.__users_repository.find_by_identifier(identifier)
 
         if user is None:
-            raise ResourNotFoundError(
+            return ResourNotFoundError(
                 message="Usuário não encontrado.", resource="Usuário"
             )
 

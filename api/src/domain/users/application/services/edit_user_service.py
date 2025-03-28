@@ -38,7 +38,9 @@ class EditUserService:
         self.__users_repository = users_repository
         self.__password_handler = password_handler
 
-    def execute(self, props: EditUserDTO) -> None:
+    def execute(
+        self, props: EditUserDTO
+    ) -> None | AlreadyExistsError | ResourNotFoundError:
         """
         Executes the user data editing process.
 
@@ -49,24 +51,20 @@ class EditUserService:
             props (EditUserDTO): The data transfer object containing the user details to be updated.
 
         Returns:
-            None
+            None | ResourNotFoundError | AlreadyExistsError
         """
-
         user = self.__users_repository.find_by_identifier(props.identifier)
 
         if user is None:
-            raise ResourNotFoundError("Usuário não encontrado.", resource="Usuário")
+            return ResourNotFoundError("Usuário não encontrado.", resource="Usuário")
 
         if user.get_email() != props.email:
             user_email = self.__users_repository.find_by_email(props.email)
-            if user_email is not None:
-                raise AlreadyExistsError(message="Email já cadastrado.", field="email")
 
-        if props.password is None:
-            user.set_password(
-                self.__password_handler.decrypt_password(user.get_password())
-            )
-        else:
+            if user_email is not None:
+                return AlreadyExistsError(message="Email já cadastrado.", field="email")
+
+        if props.password is not None:
             user.set_password(self.__password_handler.encrypt_password(props.password))
 
         user.set_email(props.email)

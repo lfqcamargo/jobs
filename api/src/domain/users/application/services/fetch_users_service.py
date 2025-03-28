@@ -31,7 +31,7 @@ class FetchUsersService:
         """
         self.__users_repository = users_repository
 
-    def execute(self) -> None:
+    def execute(self) -> None | ResourNotFoundError:
         """
         Executes the process of fetching users from the repository.
 
@@ -42,12 +42,11 @@ class FetchUsersService:
 
         Returns:
             list[User]: A list of User objects representing all users in the repository.
-
-        Raises:
-            ResourNotFoundError: If no users are found in the repository.
+            ResourNotFoundError
         """
         users = self.__users_repository.fetch_all()
-        if len(users) == 0:
+
+        if users is None:
             return ResourNotFoundError(message="Users not found.", resource="users")
 
         return users
