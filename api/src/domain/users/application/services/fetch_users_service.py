@@ -1,4 +1,4 @@
-from src.core.errors.resource_not_found_error import ResourNotFoundError
+from src.core.errors.resource_not_found_error import ResourceNotFoundError
 from ..interfaces.users_repository_interface import UsersRepositoryInterface
 from ...enterprise.entities.user import User
 
@@ -15,7 +15,7 @@ class FetchUsersService:
     def __init__(
         self,
         users_repository: UsersRepositoryInterface,
-    ) -> list[User] | ResourNotFoundError:
+    ) -> list[User] | ResourceNotFoundError:
         """
         Initializes the FetchUsersService with a user repository.
 
@@ -31,7 +31,7 @@ class FetchUsersService:
         """
         self.__users_repository = users_repository
 
-    def execute(self) -> None | ResourNotFoundError:
+    def execute(self) -> None | ResourceNotFoundError:
         """
         Executes the process of fetching users from the repository.
 
@@ -42,11 +42,11 @@ class FetchUsersService:
 
         Returns:
             list[User]: A list of User objects representing all users in the repository.
-            ResourNotFoundError
+            ResourceNotFoundError
         """
         users = self.__users_repository.fetch_all()
 
         if users is None:
-            return ResourNotFoundError(message="Users not found.", resource="users")
+            return ResourceNotFoundError(message="Users not found.", resource="users")
 
         return users

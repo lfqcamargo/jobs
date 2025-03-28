@@ -1,5 +1,5 @@
 import pytest
-from src.core.errors.resource_not_found_error import ResourNotFoundError
+from src.core.errors.resource_not_found_error import ResourceNotFoundError
 from src.domain.users.application.services.delete_user_service import DeleteUserService
 from src.domain.users.enterprise.entities.user import User
 from src.test.repositories.in_memory_users_repository import InMemoryUsersRepository
@@ -59,4 +59,4 @@ def test_error_when_trying_to_delete_with_user_not_exists(
 
     result = delete_user_service.execute(user.get_identifier() + 1)
 
-    assert isinstance(result, ResourNotFoundError)
+    assert isinstance(result, ResourceNotFoundError)

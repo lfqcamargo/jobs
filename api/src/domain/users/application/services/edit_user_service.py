@@ -1,5 +1,5 @@
 from src.core.errors.already_exists_error import AlreadyExistsError
-from src.core.errors.resource_not_found_error import ResourNotFoundError
+from src.core.errors.resource_not_found_error import ResourceNotFoundError
 from src.core.errors.error_server import ErrorServer
 from src.domain.users.application.interfaces.password_handler_interface import (
     PasswordHandlerInterface,
@@ -40,7 +40,7 @@ class EditUserService:
 
     def execute(
         self, props: EditUserDTO
-    ) -> None | AlreadyExistsError | ResourNotFoundError:
+    ) -> None | AlreadyExistsError | ResourceNotFoundError:
         """
         Executes the user data editing process.
 
@@ -51,12 +51,12 @@ class EditUserService:
             props (EditUserDTO): The data transfer object containing the user details to be updated.
 
         Returns:
-            None | ResourNotFoundError | AlreadyExistsError
+            None | ResourceNotFoundError | AlreadyExistsError
         """
         user = self.__users_repository.find_by_identifier(props.identifier)
 
         if user is None:
-            return ResourNotFoundError("Usuário não encontrado.", resource="Usuário")
+            return ResourceNotFoundError("Usuário não encontrado.", resource="Usuário")
 
         if user.get_email() != props.email:
             user_email = self.__users_repository.find_by_email(props.email)

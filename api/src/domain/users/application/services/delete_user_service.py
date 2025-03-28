@@ -1,4 +1,4 @@
-from src.core.errors.resource_not_found_error import ResourNotFoundError
+from src.core.errors.resource_not_found_error import ResourceNotFoundError
 from src.core.errors.error_server import ErrorServer
 from ..interfaces.users_repository_interface import UsersRepositoryInterface
 
@@ -24,27 +24,27 @@ class DeleteUserService:
         """
         self.__users_repository = users_repository
 
-    def execute(self, identifier: int) -> None | ResourNotFoundError:
+    def execute(self, identifier: int) -> None | ResourceNotFoundError:
         """
         Executes the user deletion process.
 
         This method checks if the user with the given identifier exists. If the user is found,
-        it proceeds to delete the user. If the user is not found, a `ResourNotFoundError` is raised.
+        it proceeds to delete the user. If the user is not found, a `ResourceNotFoundError` is raised.
 
         Args:
             identifier (int): The identifier of the user to be deleted.
 
         Raises:
-            ResourNotFoundError: If the user is not found with the given identifier.
+            ResourceNotFoundError: If the user is not found with the given identifier.
             ErrorServer: If an error occurs during the deletion process.
 
         Returns:
-            None | ResourNotFoundError
+            None | ResourceNotFoundError
         """
         user = self.__users_repository.find_by_identifier(identifier)
 
         if user is None:
-            return ResourNotFoundError(
+            return ResourceNotFoundError(
                 message="Usuário não encontrado.", resource="Usuário"
             )
 

@@ -1,7 +1,7 @@
 from datetime import datetime
 from src.core.errors.already_exists_error import AlreadyExistsError
 from src.core.errors.error_server import ErrorServer
-from src.core.errors.resource_not_found_error import ResourNotFoundError
+from src.core.errors.resource_not_found_error import ResourceNotFoundError
 from src.domain.users.application.services.edit_user_service import EditUserService
 from src.domain.users.application.dto.edit_user_dto import EditUserDTO
 from ..validators.edit_user_validator import edit_user_validator
@@ -45,7 +45,7 @@ class EditUserController:
             password (str | None): The password of the user, which can be omitted if not changing.
 
         Raises:
-            ResourNotFoundError: If no user is found with the provided identifier.
+            ResourceNotFoundError: If no user is found with the provided identifier.
             ValidationError: If any of the fields fail validation.
             ErrorServer: If an internal server error occurs.
         """
@@ -61,7 +61,7 @@ class EditUserController:
         if isinstance(result, Exception):
             if isinstance(result, AlreadyExistsError):
                 raise result
-            if isinstance(result, ResourNotFoundError):
+            if isinstance(result, ResourceNotFoundError):
                 raise result
 
             raise ErrorServer("Erro Interno.")

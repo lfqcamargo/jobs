@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from ...enterprise.enums.skill_level import SkillLevel
 
 
 @dataclass
@@ -11,7 +12,7 @@ class CreateSkillDTO:
         self,
         description: str,
         time_month: int,
-        level: str,
+        level: SkillLevel,
         user_id: int,
         identifier: int = 0,
     ) -> None:

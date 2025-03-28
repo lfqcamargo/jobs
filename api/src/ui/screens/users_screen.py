@@ -4,7 +4,7 @@ import customtkinter as ctk
 from pydantic import ValidationError
 
 
-from src.core.errors.resource_not_found_error import ResourNotFoundError
+from src.core.errors.resource_not_found_error import ResourceNotFoundError
 from src.core.errors.error_server import ErrorServer
 from src.domain.users.enterprise.entities.user import User
 from src.infra.desktop.composers.fetch_users_composer import fetch_users_composer
@@ -195,7 +195,7 @@ class TableFrame(ctk.CTkScrollableFrame):
                 except Exception as e:
                     if isinstance(e, ValidationError):
                         messagebox.showerror("Error", str(e), parent=self)
-                    if isinstance(e, ResourNotFoundError):
+                    if isinstance(e, ResourceNotFoundError):
                         messagebox.showerror("Error", str(e), parent=self)
                     else:
                         messagebox.showerror("Error", "Erro Interno.")

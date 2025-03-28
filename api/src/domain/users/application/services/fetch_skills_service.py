@@ -1,53 +1,53 @@
-from src.core.errors.resource_not_found_error import ResourNotFoundError
+from src.core.errors.resource_not_found_error import ResourceNotFoundError
 from ..interfaces.skills_repository_interface import SkillsRepositoryInterface
 from ...enterprise.entities.skill import Skill
 
 
 class FetchSkillsService:
     """
-    Service responsible for fetching all skills.
+    Service responsible for retrieving all skills associated with a user.
 
-    This class handles the business logic for retrieving skills from the repository.
-    If no skills are found, an error is raised. It ensures that the data is consistent
-    and properly fetched from the underlying data source.
+    This service fetches skills from the repository, ensuring the data is consistent.
+    If no skills are found for the user, an error is raised.
     """
 
     def __init__(
         self,
         skills_repository: SkillsRepositoryInterface,
-    ) -> list[Skill] | ResourNotFoundError:
+    ) -> None:
         """
-        Initializes the FetchSkillsService with a skill repository.
-
-        This service class requires a repository that implements the SkillsRepositoryInterface
-        to fetch the list of skills from the data source.
+        Initializes the FetchSkillsService with a skills repository.
 
         Args:
             skills_repository (SkillsRepositoryInterface): The repository responsible for
-            fetching skill data.
+            retrieving skill data.
 
         Returns:
             None
         """
         self.__skills_repository = skills_repository
 
-    def execute(self) -> None:
+    def execute(self, user_id: int) -> list[Skill] | ResourceNotFoundError:
         """
-        Executes the process of fetching skills from the repository.
+        Retrieves the list of skills for a specific user.
 
-        It retrieves the list of all skills and raises an error if no skills are found.
+        This method fetches the skills associated with the provided user ID and
+        returns them. If no skills are found for the user, a `ResourceNotFoundError` is raised.
 
         Args:
-            None
+            user_id (int): The identifier of the user for whom skills should be fetched.
 
         Returns:
-            list[Skill]: A list of Skill objects representing all skills in the repository.
+            list[Skill]: A list of `Skill` objects associated with the given user.
 
         Raises:
-            ResourNotFoundError: If no skills are found in the repository.
+            ResourceNotFoundError: If no skills are found for the specified user.
         """
-        skills = self.__skills_repository.fetch_all()
-        if len(skills) == 0:
-            return ResourNotFoundError(message="Skills not found.", resource="skills")
+        skills = self.__skills_repository.fetch_all_by_user(user_id)
+
+        if not skills:
+            return ResourceNotFoundError(
+                message="Habilidades não encontradas.", resource="Habilidades"
+            )
 
         return skills

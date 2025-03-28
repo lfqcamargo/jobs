@@ -1,24 +1,7 @@
 from datetime import date
-from enum import Enum
 from src.core.entities.entity import Entity
 from ...application.dto.create_skill_dto import CreateSkillDTO
-
-
-class SkillLevel(Enum):
-    """
-    Enumeration representing the possible skill levels.
-
-    Attributes:
-        JUNIOR (str): Represents a junior level skill.
-        PLENO (str): Represents a mid-level (Pleno) skill.
-        SENIOR (str): Represents a senior level skill.
-        ESPECIALISTA (str): Represents a specialist level skill.
-    """
-
-    JUNIOR = "Junior"
-    MID_LEVEL = "Pleno"
-    SENIOR = "Senior"
-    SPECIALIST = "Especialista"
+from ..enums.skill_level import SkillLevel
 
 
 class Skill(Entity):
@@ -33,7 +16,7 @@ class Skill(Entity):
         self,
         description: str,
         time_month: int,
-        level: str,
+        level: SkillLevel,
         user_id: int,
         identifier: int = 0,
     ) -> None:
@@ -41,11 +24,19 @@ class Skill(Entity):
         Initializes a Skill instance.
 
         Args:
-            description (str): The description of the skill.
-            time_month (int): The time month of the skill.
-            level (str): The skill's level.
-            user_id (int): User id of the user skill.
-            identifier (int, optional): The unique identifier of the skill. Defaults to 0.
+            description (str): A brief description of the skill (e.g., "Python programming").
+            time_month (int): The duration (in months) the user has spent learning or practicing
+            the skill.
+            level (SkillLevel): The proficiency level of the skill (e.g., Beginner, Intermediate,
+            Advanced).
+            user_id (int): The unique identifier of the user associated with this skill.
+            identifier (int, optional): A unique identifier for the skill instance. Defaults to 0.
+
+        Attributes:
+            __description (str): The description of the skill.
+            __time_month (int): The time, in months, the user has been practicing the skill.
+            __level (SkillLevel): The level of proficiency in the skill.
+            __user_id (int): The ID of the user who possesses the skill.
         """
         super().__init__(identifier)
         self.__description = description

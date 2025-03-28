@@ -1,5 +1,4 @@
-from src.core.errors.already_exists_error import AlreadyExistsError
-from src.core.errors.resource_not_found_error import ResourNotFoundError
+from src.core.errors.resource_not_found_error import ResourceNotFoundError
 from src.core.errors.error_server import ErrorServer
 from ..interfaces.skills_repository_interface import SkillsRepositoryInterface
 from ..dto.edit_skill_dto import EditSkillDTO
@@ -7,13 +6,9 @@ from ..dto.edit_skill_dto import EditSkillDTO
 
 class EditSkillService:
     """
-    Service responsible for editing skill data.
+    Service responsible for updating skill data.
 
-    This class handles the business logic for updating an existing skill's data,
-    ensuring that the provided email does not conflict with another skill's email.
-
-    Attributes:
-        __skills_repository (SkillsRepositoryInterface): Repository for skill data operations.
+    This class ensures that a skill exists before updating its details.
     """
 
     def __init__(
@@ -21,40 +16,37 @@ class EditSkillService:
         skills_repository: SkillsRepositoryInterface,
     ) -> None:
         """
-        Initializes the EditSkillService with a skill repository and password handler.
+        Initializes the EditSkillService with a skills repository.
 
         Args:
-            skills_repository (SkillsRepositoryInterface): The repository responsible for skill
-            data operations.
-            password_handler (PasswordHandlerInterface): The handler responsible for encrypting
-            skill passwords.
+            skills_repository (SkillsRepositoryInterface): Repository for skill-related operations.
         """
         self.__skills_repository = skills_repository
 
     def execute(self, props: EditSkillDTO) -> None:
         """
-        Executes the skill data editing process.
+        Executes the skill update process.
 
-        This method verifies if the skill exists, checks for any email conflicts,
-        and updates the skill's details. It also updates the password if provided.
+        This method verifies if the skill exists and updates its details accordingly.
+        If the skill is not found, returns a `ResourceNotFoundError`.
+        If there is an error during the update, returns an `ErrorServer`.
 
         Args:
-            props (EditSkillDTO): The data transfer object containing the skill details to be
-            updated.
-        Returns:
-            None
-        """
+            props (EditSkillDTO): Data transfer object containing the updated skill details.
 
+        Returns:
+            None | ResourceNotFoundError | ErrorServer
+        """
         skill = self.__skills_repository.find_by_identifier(props.identifier)
 
         if skill is None:
-            raise ResourNotFoundError(
-                "Habilidade não encontrado.", resource="Habilidade"
+            return ResourceNotFoundError(
+                message="Habilidade não encontrada.", resource="Habilidade"
             )
 
-        skill.set_
-        skill.set_name(props.name)
-        skill.set_birthday_date(props.birthday_date)
+        skill.set_description(props.description)
+        skill.set_level(props.level)
+        skill.set_time_month(props.time_month)
 
         result = self.__skills_repository.save(skill)
 

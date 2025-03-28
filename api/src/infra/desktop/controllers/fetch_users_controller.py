@@ -1,4 +1,4 @@
-from src.core.errors.resource_not_found_error import ResourNotFoundError
+from src.core.errors.resource_not_found_error import ResourceNotFoundError
 from src.core.errors.error_server import ErrorServer
 from src.domain.users.application.services.fetch_users_service import FetchUsersService
 from src.domain.users.enterprise.entities.user import User
@@ -29,13 +29,13 @@ class FetchUserController:
             list[User]: A list of users if found.
 
         Raises:
-            ResourNotFoundError: If no users are found.
+            ResourceNotFoundError: If no users are found.
             ErrorServer: If an internal server error occurs.
         """
         result = self.__service.execute()
 
         if isinstance(result, Exception):
-            if isinstance(result, ResourNotFoundError):
+            if isinstance(result, ResourceNotFoundError):
                 raise result
 
             raise ErrorServer("Erro Interno.")

@@ -26,3 +26,22 @@ class SkillMapper:
             user_id=raw.user_id,
         )
         return Skill.create(dto)
+
+    @staticmethod
+    def to_sql(skill: Skill) -> SkillModel:
+        """
+        Converts a Skill domain entity to a SkillModel instance for database persistence.
+
+        Args:
+            skill (Skill): The domain entity representing a skill.
+
+        Returns:
+            SkillModel: A database model instance representing the skill.
+        """
+        return SkillModel(
+            id=skill.get_identifier() if skill.get_identifier() != 0 else None,
+            user_id=skill.get_user_id(),
+            description=skill.get_description(),
+            time_month=skill.get_time_month(),
+            level=skill.get_level(),
+        )

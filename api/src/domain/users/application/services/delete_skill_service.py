@@ -1,14 +1,13 @@
-from src.core.errors.resource_not_found_error import ResourNotFoundError
+from src.core.errors.resource_not_found_error import ResourceNotFoundError
 from src.core.errors.error_server import ErrorServer
 from ..interfaces.skills_repository_interface import SkillsRepositoryInterface
 
 
 class DeleteSkillService:
     """
-    Service responsible for deleting a skill.
+    Service responsible for handling skill deletion.
 
-    This class handles the business logic for deleting a skill by its identifier,
-    ensuring that the skill exists before attempting to delete.
+    This class ensures that a skill exists before attempting to delete it.
     """
 
     def __init__(
@@ -16,36 +15,32 @@ class DeleteSkillService:
         skills_repository: SkillsRepositoryInterface,
     ) -> None:
         """
-        Initializes the DeleteSkillService with a skill repository.
+        Initialize the DeleteSkillService with a skills repository.
 
         Args:
-            skills_repository (SkillsRepositoryInterface): The repository responsible for
-            skill data operations (find, delete, etc.).
+            skills_repository (SkillsRepositoryInterface): Repository for skill-related operations.
         """
         self.__skills_repository = skills_repository
 
     def execute(self, identifier: int) -> None:
         """
-        Executes the skill deletion process.
+        Execute the skill deletion process.
 
-        This method checks if the skill with the given identifier exists. If the skill is found,
-        it proceeds to delete the skill. If the skill is not found, a `ResourNotFoundError` is raised.
+        Verifies if the skill exists before deleting it.
+        If the skill does not exist, returns a `ResourceNotFoundError`.
+        If there is an error during deletion, returns an `ErrorServer`.
 
         Args:
             identifier (int): The identifier of the skill to be deleted.
 
-        Raises:
-            ResourNotFoundError: If the skill is not found with the given identifier.
-            ErrorServer: If an error occurs during the deletion process.
-
         Returns:
-            None
+            None | ResourceNotFoundError | ErrorServer
         """
         skill = self.__skills_repository.find_by_identifier(identifier)
 
         if skill is None:
-            return ResourNotFoundError(
-                message="Usuário não encontrado.", resource="Usuário"
+            return ResourceNotFoundError(
+                message="Habilidade não encontrada.", resource="Habilidade"
             )
 
         result = self.__skills_repository.delete(skill.get_identifier())

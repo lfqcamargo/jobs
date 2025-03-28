@@ -6,36 +6,67 @@ class SkillsRepositoryInterface(ABC):
     """
     Interface for the Skills Repository.
 
-    This class defines the contract that any implementation of a Skills Repository
-    must follow. It provides methods to retrieve skill data.
+    Defines the contract that any implementation of a Skills Repository must follow.
+    It provides methods to manage skill data.
     """
 
     @abstractmethod
     def create(self, skill: Skill) -> bool:
         """
-        Persists a new skill in the database.
-
-        This method takes a domain entity representing a skill and saves it in the database.
-        Implementations should handle the persistence logic, ensuring the skill data is stored
-        correctly.
+        Persist a new skill in the database.
 
         Args:
-            skill (Skill): The domain entity representing the skill to be stored.
+            skill (Skill): The skill entity to be stored.
 
         Returns:
-            bool
+            bool: True if the skill was successfully created, False otherwise.
         """
 
     @abstractmethod
-    def fetch_all(self) -> list[Skill] | None:
+    def find_by_identifier(self, identifier: int) -> Skill | None:
         """
-        Retrieves all skills from the database.
+        Retrieve a skill by its identifier.
 
-        This method queries the database and returns a list of all skill entities stored.
-        The implementation should handle the retrieval logic, ensuring that the list of skills
-        is accurate and complete.
+        Args:
+            identifier (int): The unique ID of the skill.
 
         Returns:
-            list[Skill] | None: A list of Skill objects representing all skills in the database
-            or None.
+            Skill | None: The skill instance if found, otherwise None.
+        """
+
+    @abstractmethod
+    def fetch_all_by_user(self, user_id: int) -> list[Skill]:
+        """
+        Retrieve all skills belonging to a specific user.
+
+        Args:
+            user_id (int): The user ID.
+
+        Returns:
+            list[Skill]: A list of Skill objects associated with the user.
+                         Returns an empty list if no skills are found.
+        """
+
+    @abstractmethod
+    def save(self, skill: Skill) -> bool:
+        """
+        Update an existing skill in the database.
+
+        Args:
+            skill (Skill): The skill entity with updated information.
+
+        Returns:
+            bool: True if the skill was successfully updated, False otherwise.
+        """
+
+    @abstractmethod
+    def delete(self, identifier: int) -> bool:
+        """
+        Delete a skill by its identifier.
+
+        Args:
+            identifier (int): The unique ID of the skill.
+
+        Returns:
+            bool: True if the skill was successfully deleted, False otherwise.
         """

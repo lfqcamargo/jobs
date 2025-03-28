@@ -20,6 +20,16 @@ class SkillsRepository(SkillsRepositoryInterface):
     def __init__(self, db_connection: DBConnectionHandlerInterface) -> None:
         self.__db_connection = db_connection
 
+    def create(self, skill: Skill) -> bool:
+        with self.__db_connection as database:
+            skill_model = SkillMapper.to_sql(skill)
+            try:
+                database.session.add(skill_model)
+                database.session.commit()
+                return True
+            except Exception:
+                return False
+
     def fetch_all(self) -> list[Skill] | None:
         with self.__db_connection as database:
             skills_model = database.session.query(SkillModel).all()

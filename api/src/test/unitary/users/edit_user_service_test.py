@@ -1,5 +1,5 @@
 import pytest
-from src.core.errors.resource_not_found_error import ResourNotFoundError
+from src.core.errors.resource_not_found_error import ResourceNotFoundError
 from src.core.errors.already_exists_error import AlreadyExistsError
 from src.domain.users.application.services.edit_user_service import EditUserService
 from src.domain.users.enterprise.entities.user import User
@@ -145,4 +145,4 @@ def test_error_when_trying_to_edit_with_user_not_exists(
 
     result = edit_user_service.execute(dto)
 
-    assert isinstance(result, ResourNotFoundError)
+    assert isinstance(result, ResourceNotFoundError)

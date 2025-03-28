@@ -1,5 +1,5 @@
 import pytest
-from src.core.errors.resource_not_found_error import ResourNotFoundError
+from src.core.errors.resource_not_found_error import ResourceNotFoundError
 from src.domain.users.application.services.fetch_users_service import FetchUsersService
 from src.domain.users.enterprise.entities.user import User
 from src.test.repositories.in_memory_users_repository import InMemoryUsersRepository
@@ -61,4 +61,4 @@ def test_error_when_trying_to_fetch_with_users_not_exists(
 
     result = fetch_user_service.execute()
 
-    assert isinstance(result, ResourNotFoundError)
+    assert isinstance(result, ResourceNotFoundError)

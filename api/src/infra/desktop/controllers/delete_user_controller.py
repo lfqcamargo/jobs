@@ -1,4 +1,4 @@
-from src.core.errors.resource_not_found_error import ResourNotFoundError
+from src.core.errors.resource_not_found_error import ResourceNotFoundError
 from src.core.errors.error_server import ErrorServer
 from src.domain.users.application.services.delete_user_service import DeleteUserService
 
@@ -28,14 +28,14 @@ class DeleteUserController:
             identifier (int): The identifier of the user to be deleted.
 
         Raises:
-            ResourNotFoundError: If no user is found with the provided identifier.
+            ResourceNotFoundError: If no user is found with the provided identifier.
             ErrorServer: If an internal server error occurs.
         """
 
         result = self.__service.execute(identifier)
 
         if isinstance(result, Exception):
-            if isinstance(result, ResourNotFoundError):
+            if isinstance(result, ResourceNotFoundError):
                 raise result
 
             if isinstance(result, ErrorServer):

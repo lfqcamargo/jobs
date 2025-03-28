@@ -1,4 +1,4 @@
-class ResourNotFoundError(Exception):
+class ResourceNotFoundError(Exception):
     """
     Exception raised when a user with the same email or nickname already exists.
 
@@ -9,7 +9,7 @@ class ResourNotFoundError(Exception):
 
     def __init__(self, message: str, resource: str) -> None:
         """
-        Initializes the ResourNotFoundError with a specific message.
+        Initializes the ResourceNotFoundError with a specific message.
 
         Args:
             message (str): The error message to describe the exception.
@@ -17,7 +17,7 @@ class ResourNotFoundError(Exception):
         """
         super().__init__(message)
         self.message = message
-        self.name = "ResourNotFoundError"
+        self.name = "ResourceNotFoundError"
         self.resource = resource
 
     def __str__(self):
