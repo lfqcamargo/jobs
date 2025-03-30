@@ -3,11 +3,9 @@ from src.core.errors.resource_not_found_error import ResourceNotFoundError
 from src.domain.users.application.services.edit_skill_service import (
     EditSkillService,
 )
-from src.domain.users.enterprise.entities.skill import Skill
-from src.domain.users.enterprise.enums.skill_level import SkillLevel
-from src.domain.users.application.dto.create_skill_dto import CreateSkillDTO
 from src.test.repositories.in_memory_skills_repository import InMemorySkillsRepository
 from src.test.repositories.in_memory_users_repository import InMemoryUsersRepository
+from src.test.factories.make_skill import MakeSkill
 
 
 @pytest.fixture(name="fixture")
@@ -34,22 +32,12 @@ def test_edited_user_successfully(
     """
     edit_skill_service, skills_repository, _ = fixture
 
-    skill = Skill(
-        description="python",
-        time_month=12,
-        level=SkillLevel.MID_LEVEL,
-        user_id=1,
-        identifier=1,
-    )
+    skill = MakeSkill().make_skill()
     skills_repository.items.append(skill)
 
-    dto = CreateSkillDTO(
-        description="javascript",
-        time_month=24,
-        level=SkillLevel.SENIOR,
-        identifier=1,
-        user_id=1,
-    )
+    dto = MakeSkill(
+        user_id=skill.get_user_id(), identifier=skill.get_identifier()
+    ).make_skill_dto()
 
     result = edit_skill_service.execute(dto)
 
@@ -70,22 +58,10 @@ def test_error_when_trying_to_edit_with_skill_not_exists(
     """
     edit_skill_service, skills_repository, _ = fixture
 
-    skill = Skill(
-        description="python",
-        time_month=12,
-        level=SkillLevel.MID_LEVEL,
-        user_id=1,
-        identifier=1,
-    )
+    skill = MakeSkill().make_skill()
     skills_repository.items.append(skill)
 
-    dto = CreateSkillDTO(
-        description="javascript",
-        time_month=24,
-        level=SkillLevel.SENIOR,
-        identifier=2,
-        user_id=1,
-    )
+    dto = MakeSkill(identifier=skill.get_identifier() + 1).make_skill_dto()
 
     result = edit_skill_service.execute(dto)
 

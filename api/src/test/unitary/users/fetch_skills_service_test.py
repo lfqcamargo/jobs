@@ -7,6 +7,7 @@ from src.domain.users.enterprise.entities.skill import Skill
 from src.domain.users.enterprise.enums.skill_level import SkillLevel
 from src.test.repositories.in_memory_skills_repository import InMemorySkillsRepository
 from src.test.repositories.in_memory_users_repository import InMemoryUsersRepository
+from src.test.factories.make_skill import MakeSkill
 
 
 @pytest.fixture(name="fixture")
@@ -35,31 +36,13 @@ def test_fetched_skills_successfully(
     """
     fetch_skill_service, skills_repository, _ = fixture
 
-    skill_1 = Skill(
-        description="python",
-        time_month=12,
-        level=SkillLevel.MID_LEVEL,
-        user_id=1,
-        identifier=1,
-    )
+    skill_1 = MakeSkill(user_id=1).make_skill()
     skills_repository.items.append(skill_1)
 
-    skill_2 = Skill(
-        description="javascript",
-        time_month=24,
-        level=SkillLevel.SENIOR,
-        user_id=1,
-        identifier=2,
-    )
+    skill_2 = MakeSkill(user_id=1).make_skill()
     skills_repository.items.append(skill_2)
 
-    skill_3 = Skill(
-        description="javascript",
-        time_month=24,
-        level=SkillLevel.SENIOR,
-        user_id=2,
-        identifier=2,
-    )
+    skill_3 = MakeSkill(user_id=2).make_skill()
     skills_repository.items.append(skill_3)
 
     result = fetch_skill_service.execute(skill_1.get_user_id())
@@ -78,13 +61,7 @@ def test_error_when_trying_to_fetch_with_skill_not_exists(
     """
     fetch_skill_service, skills_repository, _ = fixture
 
-    skill = Skill(
-        description="python",
-        time_month=12,
-        level=SkillLevel.MID_LEVEL,
-        user_id=1,
-        identifier=1,
-    )
+    skill = MakeSkill().make_skill()
     skills_repository.items.append(skill)
 
     result = fetch_skill_service.execute(skill.get_user_id() + 1)
