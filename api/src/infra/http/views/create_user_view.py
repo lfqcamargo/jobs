@@ -1,10 +1,9 @@
 from datetime import datetime
-from src.infra.http.controllers.create_user_controller import (
-    CreateUserController,
+from src.domain.users.application.controllers.interfaces.create_user_controller_interface import (
+    CreateUserControllerInterface,
 )
 from src.infra.http.views.http_types.http_request import HttpRequest
 from src.infra.http.views.http_types.http_response import HttpResponse
-from src.domain.users.application.dto.create_user_dto import CreateUserDTO
 from .interfaces.view_interface import ViewInterface
 from ..validators.create_user_validator import create_user_validator
 
@@ -14,15 +13,15 @@ class CreateUserView(ViewInterface):
     View responsible for handling HTTP requests related to user creation.
 
     This class acts as an adapter between HTTP requests and the
-    CreateUserController, ensuring proper request validation and response formatting.
+    CreateUserControllerInterface, ensuring proper request validation and response formatting.
     """
 
-    def __init__(self, controller: CreateUserController) -> None:
+    def __init__(self, controller: CreateUserControllerInterface) -> None:
         """
         Initializes the CreateUserView with a specific controller.
 
         Args:
-            controller (CreateUserController): The controller responsible for handling user
+            controller (CreateUserControllerInterface): The controller responsible for handling user
             creation requests.
         """
         self.__controller = controller
@@ -34,12 +33,19 @@ class CreateUserView(ViewInterface):
             http_request.body["birthday_date"], "%d/%m/%Y"
         ).date()
 
-        dto = CreateUserDTO(
-            name=http_request.body["name"],
-            email=http_request.body["email"],
-            password=http_request.body["password"],
+        name = http_request.body["name"]
+        email = http_request.body["email"]
+        password = http_request.body["password"]
+        curriculum = http_request.files
+
+        curriculum = http_request.files.read()
+
+        body_response = self.__controller.handle(
+            name=name,
+            email=email,
+            password=password,
             birthday_date=birthday_date,
+            curriculum=curriculum,
         )
 
-        body_response = self.__controller.handle(dto)
         return HttpResponse(status_code=201, body=body_response)

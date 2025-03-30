@@ -2,6 +2,7 @@ from typing import Any
 from flask import Blueprint, jsonify, Response, request
 from src.infra.http.views.http_types.http_request import HttpRequest
 from src.infra.http.composers.create_user_composer import create_user_composer
+import json
 
 user_route_bp = Blueprint("users_routes", __name__)
 
@@ -18,9 +19,9 @@ def run_linkedin() -> tuple[Response, Any]:
     Returns:
         tuple[Response, Any]: A tuple containing the formatted JSON response and HTTP status code.
     """
-
-    body = request.json
-    http_request = HttpRequest(body=body)
+    files = request.files.get("curriculum")
+    body = json.loads(request.form.get("json_data"))
+    http_request = HttpRequest(body=body, files=files)
     view = create_user_composer()
     http_response = view.handle(http_request)
 

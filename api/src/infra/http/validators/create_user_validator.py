@@ -27,3 +27,10 @@ def create_user_validator(http_request: HttpRequest) -> None:
         BodyData(**http_request.body)
     except ValidationError as error:
         raise error
+
+    curriculum = http_request.files
+    if not curriculum:
+        raise ValueError("Curriculum file is required.")
+
+    if curriculum.mimetype != "application/pdf":
+        raise ValueError("Curriculum must be a PDF file.")

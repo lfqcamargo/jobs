@@ -1,5 +1,5 @@
 from src.core.errors.resource_not_found_error import ResourceNotFoundError
-from src.core.errors.error_server import ErrorServer
+from src.core.errors.domain_error import DomainError
 from ..interfaces.skills_repository_interface import SkillsRepositoryInterface
 
 
@@ -28,13 +28,13 @@ class DeleteSkillService:
 
         Verifies if the skill exists before deleting it.
         If the skill does not exist, returns a `ResourceNotFoundError`.
-        If there is an error during deletion, returns an `ErrorServer`.
+        If there is an error during deletion, returns an `DomainError`.
 
         Args:
             identifier (int): The identifier of the skill to be deleted.
 
         Returns:
-            None | ResourceNotFoundError | ErrorServer
+            None | ResourceNotFoundError | DomainError
         """
         skill = self.__skills_repository.find_by_identifier(identifier)
 
@@ -46,6 +46,6 @@ class DeleteSkillService:
         result = self.__skills_repository.delete(skill.get_identifier())
 
         if result is False:
-            return ErrorServer(message="Erro ao tentar atualizar banco de dados.")
+            return DomainError(message="Erro ao tentar atualizar banco de dados.")
 
         return None

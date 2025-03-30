@@ -1,6 +1,6 @@
 from src.core.errors.already_exists_error import AlreadyExistsError
 from src.core.errors.resource_not_found_error import ResourceNotFoundError
-from src.core.errors.error_server import ErrorServer
+from src.core.errors.domain_error import DomainError
 from src.domain.users.application.interfaces.password_handler_interface import (
     PasswordHandlerInterface,
 )
@@ -74,6 +74,6 @@ class EditUserService:
         result = self.__users_repository.save(user)
 
         if result is False:
-            return ErrorServer(message="Erro ao tentar atualizar banco de dados.")
+            return DomainError(message="Erro ao tentar atualizar banco de dados.")
 
         return None

@@ -17,6 +17,7 @@ class User(Entity):
         email: str,
         password: str,
         birthday_date: date,
+        curriculum: bytes,
         identifier: int = 0,
     ) -> None:
         """
@@ -27,6 +28,7 @@ class User(Entity):
             email (str): The email of the user.
             password (str): The user's password.
             birthday_date (date): The birthday date of the user.
+            curriculum (bytes, optional): The user's curriculum stored as binary data.
             identifier (int, optional): The unique identifier of the user. Defaults to 0.
         """
         super().__init__(identifier)
@@ -34,6 +36,7 @@ class User(Entity):
         self.__email = email
         self.__password = password
         self.__birthday_date = birthday_date
+        self.__curriculum = curriculum
 
     def get_name(self) -> str:
         """
@@ -107,6 +110,24 @@ class User(Entity):
         """
         self.__birthday_date = birthday_date
 
+    def get_curriculum(self) -> bytes | None:
+        """
+        Retrieve the user's curriculum (binary data).
+
+        Returns:
+            bytes | None: The binary data of the user's curriculum, or None if not set.
+        """
+        return self.__curriculum
+
+    def set_curriculum(self, curriculum: bytes) -> None:
+        """
+        Set the user's curriculum (binary data).
+
+        Args:
+            curriculum (bytes): The binary data to be set for the user's curriculum.
+        """
+        self.__curriculum = curriculum
+
     @staticmethod
     def create(props: CreateUserDTO) -> "User":
         """
@@ -124,6 +145,7 @@ class User(Entity):
             password=props.password,
             birthday_date=props.birthday_date,
             identifier=props.identifier,
+            curriculum=props.curriculum,
         )
 
         return user

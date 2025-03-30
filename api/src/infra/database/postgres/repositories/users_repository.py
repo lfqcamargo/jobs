@@ -32,6 +32,7 @@ class UsersRepository(UsersRepositoryInterface):
                 return False
 
     def find_by_email(self, email: str) -> User | None:
+
         with self.__db_connection as database:
             user_model = (
                 database.session.query(UserModel)
@@ -67,6 +68,7 @@ class UsersRepository(UsersRepositoryInterface):
 
     def save(self, user: User) -> bool:
         with self.__db_connection as database:
+
             user_model = UserMapper.to_sql(user)
             try:
                 database.session.merge(user_model)

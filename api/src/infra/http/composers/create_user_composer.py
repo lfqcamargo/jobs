@@ -2,7 +2,7 @@ from src.infra.database.postgres.settings.connection import db_connection_handle
 from src.infra.database.postgres.repositories.users_repository import (
     UsersRepository,
 )
-from src.infra.http.controllers.create_user_controller import (
+from src.domain.users.application.controllers.create_user_controller import (
     CreateUserController,
 )
 from src.infra.http.views.create_user_view import CreateUserView

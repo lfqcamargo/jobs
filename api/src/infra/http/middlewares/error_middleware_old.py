@@ -1,21 +1,16 @@
 from flask import jsonify
 from pydantic import ValidationError
-from src.core.errors.already_exists_error import AlreadyExistsError
-
-# from src.core.errors.domain_error import DomainError
-from src.core.errors.resource_not_found_error import ResourceNotFoundError
-
-# from src.core.errors.wrong_credentials import WrongCredentialsError
-from src.infra.http.views.http_types.http_response import HttpResponse
 from .error_types.http_validation_param import HttpValidationParamError
-
-# from .error_types.http_bad_request import HttpBadRequestError
+from src.core.errors.already_exists_error import AlreadyExistsError
+from src.core.errors.resource_not_found_error import ResourceNotFoundError
+from src.core.errors.wrong_credentials import WrongCredentialsError
+from src.infra.http.views.http_types.http_response import HttpResponse
+from .error_types.http_bad_request import HttpBadRequestError
 from .error_types.http_not_found import HttpNotFoundError
 from .error_types.http_conflict_request import HttpConficlitError
-
-# from .error_types.http_unprocessable_entity import (
-#     HttpUnprocessableEntityError,
-# )
+from .error_types.http_unprocessable_entity import (
+    HttpUnprocessableEntityError,
+)
 
 
 def error_middleware(error: Exception) -> HttpResponse:
@@ -28,10 +23,25 @@ def error_middleware(error: Exception) -> HttpResponse:
     Returns:
         HttpResponse: The HTTP response corresponding to the handled exception.
     """
-    if isinstance(error, ValueError):
+
+    if isinstance(error, AlreadyExistsError):
         response = HttpResponse(
-            status_code=422,
-            body={"errors": [{"title": "Validation Error", "detail": str(error)}]},
+            status_code=409,
+            body={"errors": [error.to_dict()]},
+        )
+        return jsonify(response.body), response.status_code
+
+    if isinstance(error, ResourceNotFoundError):
+        response = HttpResponse(
+            status_code=404,
+            body={"errors": [error.to_dict()]},
+        )
+        return jsonify(response.body), response.status_code
+
+    if isinstance(error, WrongCredentialsError):
+        response = HttpResponse(
+            status_code=404,
+            body={"errors": [error.to_dict()]},
         )
         return jsonify(response.body), response.status_code
 
@@ -58,36 +68,22 @@ def error_middleware(error: Exception) -> HttpResponse:
         )
         return jsonify(response.body), response.status_code
 
-    if isinstance(error, AlreadyExistsError):
-        http = HttpConficlitError(error.message)
+    if isinstance(
+        error,
+        (
+            HttpBadRequestError,
+            HttpNotFoundError,
+            HttpUnprocessableEntityError,
+            HttpConficlitError,
+        ),
+    ):
         response = HttpResponse(
-            status_code=http.status_code,
-            body={"errors": [{"title": http.name, "detail": http.message}]},
+            status_code=error.status_code,
+            body={"errors": [{"title": error.name, "detail": error.message}]},
         )
         return jsonify(response.body), response.status_code
 
-    if isinstance(error, ResourceNotFoundError):
-        http = HttpNotFoundError(error.message)
-        response = HttpResponse(
-            status_code=http.status_code,
-            body={"errors": [{"title": http.name, "detail": http.message}]},
-        )
-        return jsonify(response.body), response.status_code
-
-    # if isinstance(
-    #     error,
-    #     (
-    #         HttpBadRequestError,
-    #         HttpUnprocessableEntityError,
-    #
-    #     ),
-    # ):
-    #     response = HttpResponse(
-    #         status_code=error.status_code,
-    #         body={"errors": [{"title": error.name, "detail": error.message}]},
-    #     )
-    #     return jsonify(response.body), response.status_code
-
+    # Fallback for generic exceptions
     response = HttpResponse(
         status_code=500,
         body={

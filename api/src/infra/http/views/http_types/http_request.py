@@ -1,4 +1,5 @@
 from typing import Dict, Optional, Any
+from werkzeug.datastructures import FileStorage
 
 
 class HttpRequest:
@@ -12,6 +13,7 @@ class HttpRequest:
         params: Optional[Dict[str, Any]] = None,
         headers: Dict = None,
         token_infos: Dict = None,
+        files: Optional[Dict[str, FileStorage]] = None,
     ) -> None:
         """
         Initializes an HttpRequest instance.
@@ -25,3 +27,4 @@ class HttpRequest:
         self.param = params or {}
         self.headers = headers or {}
         self.token_infos = token_infos or {}
+        self.files = files or {}

@@ -1,5 +1,5 @@
 from src.core.errors.resource_not_found_error import ResourceNotFoundError
-from src.core.errors.error_server import ErrorServer
+from src.core.errors.domain_error import DomainError
 from ..interfaces.users_repository_interface import UsersRepositoryInterface
 
 
@@ -36,7 +36,7 @@ class DeleteUserService:
 
         Raises:
             ResourceNotFoundError: If the user is not found with the given identifier.
-            ErrorServer: If an error occurs during the deletion process.
+            DomainError: If an error occurs during the deletion process.
 
         Returns:
             None | ResourceNotFoundError
@@ -51,6 +51,6 @@ class DeleteUserService:
         result = self.__users_repository.delete(user.get_identifier())
 
         if result is False:
-            return ErrorServer(message="Erro ao tentar atualizar banco de dados.")
+            return DomainError(message="Erro ao tentar atualizar banco de dados.")
 
         return None

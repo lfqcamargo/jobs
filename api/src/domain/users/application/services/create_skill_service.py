@@ -1,5 +1,5 @@
 from src.core.errors.resource_not_found_error import ResourceNotFoundError
-from src.core.errors.error_server import ErrorServer
+from src.core.errors.domain_error import DomainError
 from ..interfaces.users_repository_interface import UsersRepositoryInterface
 from ..interfaces.skills_repository_interface import SkillsRepositoryInterface
 from ..dto.create_skill_dto import CreateSkillDTO
@@ -34,13 +34,13 @@ class CreateSkillService:
 
         Ensures that the user exists before creating a new skill.
         If the user does not exist, returns a `ResourceNotFoundError`.
-        If there is an error while saving the skill, returns an `ErrorServer`.
+        If there is an error while saving the skill, returns an `DomainError`.
 
         Args:
             props (CreateSkillDTO): The DTO containing skill details.
 
         Returns:
-            None | ResourceNotFoundError | ErrorServer
+            None | ResourceNotFoundError | DomainError
         """
         user_identifier = self.__users_repository.find_by_identifier(props.user_id)
 
@@ -53,6 +53,6 @@ class CreateSkillService:
         result = self.__skills_repository.create(skill)
 
         if result is False:
-            return ErrorServer(message="Erro ao tentar atualizar banco de dados.")
+            return DomainError(message="Erro ao tentar atualizar banco de dados.")
 
         return None

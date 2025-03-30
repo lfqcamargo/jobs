@@ -1,5 +1,5 @@
 from src.core.errors.resource_not_found_error import ResourceNotFoundError
-from src.core.errors.error_server import ErrorServer
+from src.core.errors.domain_error import DomainError
 from ..interfaces.skills_repository_interface import SkillsRepositoryInterface
 from ..dto.edit_skill_dto import EditSkillDTO
 
@@ -29,13 +29,13 @@ class EditSkillService:
 
         This method verifies if the skill exists and updates its details accordingly.
         If the skill is not found, returns a `ResourceNotFoundError`.
-        If there is an error during the update, returns an `ErrorServer`.
+        If there is an error during the update, returns an `DomainError`.
 
         Args:
             props (EditSkillDTO): Data transfer object containing the updated skill details.
 
         Returns:
-            None | ResourceNotFoundError | ErrorServer
+            None | ResourceNotFoundError | DomainError
         """
         skill = self.__skills_repository.find_by_identifier(props.identifier)
 
@@ -51,6 +51,6 @@ class EditSkillService:
         result = self.__skills_repository.save(skill)
 
         if result is False:
-            return ErrorServer(message="Erro ao tentar atualizar banco de dados.")
+            return DomainError(message="Erro ao tentar atualizar banco de dados.")
 
         return None

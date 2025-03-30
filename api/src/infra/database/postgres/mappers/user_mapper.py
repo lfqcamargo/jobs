@@ -24,6 +24,7 @@ class UserMapper:
             email=raw.email,
             password=raw.password,
             birthday_date=raw.birthday_date,
+            curriculum=raw.curriculum,
             identifier=raw.id,
         )
         return User.create(dto)
@@ -45,4 +46,5 @@ class UserMapper:
             email=user.get_email(),
             password=user.get_password(),
             birthday_date=user.get_birthday_date(),
+            curriculum=user.get_curriculum(),
         )
