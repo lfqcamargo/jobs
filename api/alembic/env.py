@@ -1,5 +1,8 @@
-from logging.config import fileConfig
+import os
+from dotenv import load_dotenv
 
+load_dotenv()
+from logging.config import fileConfig
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 from src.infra.database.postgres.settings.base import Base
@@ -9,6 +12,12 @@ from alembic import context
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
+if os.getenv("ENV") == "test":
+    # Se for ambiente de teste, usar o banco de dados de teste
+    config.set_main_option("sqlalchemy.url", os.getenv("TEST_DATABASE_URL"))
+else:
+    # Caso contrário, usar o banco de dados de produçãos
+    config.set_main_option("sqlalchemy.url", os.getenv("DATABASE_URL"))
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.

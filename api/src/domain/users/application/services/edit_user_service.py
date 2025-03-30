@@ -58,18 +58,25 @@ class EditUserService:
         if user is None:
             return ResourceNotFoundError("Usuário não encontrado.", resource="Usuário")
 
-        if user.get_email() != props.email:
+        if user.get_email() != props.email and props.email is not None:
             user_email = self.__users_repository.find_by_email(props.email)
 
             if user_email is not None:
                 return AlreadyExistsError(message="Email já cadastrado.", field="email")
 
+            user.set_email(props.email)
+
         if props.password is not None:
             user.set_password(self.__password_handler.encrypt_password(props.password))
 
-        user.set_email(props.email)
-        user.set_name(props.name)
-        user.set_birthday_date(props.birthday_date)
+        if props.name is not None:
+            user.set_name(props.name)
+
+        if props.birthday_date is not None:
+            user.set_birthday_date(props.birthday_date)
+
+        if props.curriculum is not None:
+            user.set_curriculum(props.curriculum)
 
         result = self.__users_repository.save(user)
 

@@ -52,7 +52,6 @@ class CreateUserService:
         props.password = self.__password_handler.encrypt_password(props.password)
 
         user = User.create(props)
-        print(user.get_curriculum())
         result = self.__users_repository.create(user)
 
         if result is False:

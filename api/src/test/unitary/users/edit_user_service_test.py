@@ -2,10 +2,10 @@ import pytest
 from src.core.errors.resource_not_found_error import ResourceNotFoundError
 from src.core.errors.already_exists_error import AlreadyExistsError
 from src.domain.users.application.services.edit_user_service import EditUserService
-from src.domain.users.enterprise.entities.user import User
 from src.domain.users.application.dto.edit_user_dto import EditUserDTO
 from src.test.cryptography.fake_password import FakerPassword
 from src.test.repositories.in_memory_users_repository import InMemoryUsersRepository
+from src.test.factories.make_user import MakeUser
 
 
 @pytest.fixture(name="fixture")
@@ -30,42 +30,23 @@ def test_editd_user_successfully(
     """
     edit_user_service, users_repository = fixture
 
-    user = User(
-        name="Lucas Camargo",
-        email="lfqcamargo@gmail.com",
-        birthday_date="22/11/1995",
-        password="hashed_123456789",
-    )
+    user = MakeUser().make_user()
     users_repository.items.append(user)
 
     dto = EditUserDTO(
-        name="Camargo Lucas",
-        email="lfqcamargo@gmail.com.br",
-        birthday_date="11/11/1995",
         identifier=user.get_identifier(),
-        password=None,
+        email="lfqcamargo@gmail.com.br",
+        birthday_date="22/11/1995",
+        password="123456789",
     )
 
     result = edit_user_service.execute(dto)
 
     assert result is None
-    assert users_repository.items[0].get_name() == dto.name
+    assert users_repository.items[0].get_name() == user.get_name()
     assert users_repository.items[0].get_email() == dto.email
     assert users_repository.items[0].get_birthday_date() == dto.birthday_date
     assert users_repository.items[0].get_password() == "hashed_123456789"
-
-    dto = EditUserDTO(
-        name="Camargo Lucas",
-        email="lfqcamargo@gmail.com.br",
-        birthday_date="11/11/1995",
-        identifier=user.get_identifier(),
-        password="123456",
-    )
-
-    result = edit_user_service.execute(dto)
-
-    assert result is None
-    assert users_repository.items[0].get_password() == "hashed_123456"
 
 
 def test_error_when_trying_to_edit_with_duplicate_email(
@@ -77,22 +58,10 @@ def test_error_when_trying_to_edit_with_duplicate_email(
     """
     edit_user_service, users_repository = fixture
 
-    user_fixed = User(
-        name="Lucas Camargo",
-        email="lfqcamargo@gmail.com",
-        birthday_date="22/11/1995",
-        password="123456789",
-        identifier=1,
-    )
+    user_fixed = MakeUser(identifier=1, email="lfqcamargo@gmail.com").make_user()
     users_repository.items.append(user_fixed)
 
-    user_test = User(
-        name="Lucas Camargo",
-        email="lfqcamargo@gmail.com.br",
-        birthday_date="22/11/1995",
-        password="123456789",
-        identifier=2,
-    )
+    user_test = MakeUser(identifier=2).make_user()
     users_repository.items.append(user_test)
 
     dto = EditUserDTO(
@@ -117,29 +86,14 @@ def test_error_when_trying_to_edit_with_user_not_exists(
     """
     edit_user_service, users_repository = fixture
 
-    user_fixed = User(
-        name="Lucas Camargo",
-        email="lfqcamargo@gmail.com",
-        birthday_date="22/11/1995",
-        password="123456789",
-        identifier=1,
-    )
+    user_fixed = MakeUser(identifier=1, email="lfqcamargo@gmail.com").make_user()
     users_repository.items.append(user_fixed)
-
-    user_test = User(
-        name="Lucas Camargo",
-        email="lfqcamargo@gmail.com.br",
-        birthday_date="22/11/1995",
-        password="123456789",
-        identifier=2,
-    )
-    users_repository.items.append(user_test)
 
     dto = EditUserDTO(
         name="Camargo Lucas",
         email="lfqcamargo@gmail.com",
         birthday_date="11/11/1995",
-        identifier=user_test.get_identifier() + 1,
+        identifier=user_fixed.get_identifier() + 1,
         password=None,
     )
 

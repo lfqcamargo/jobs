@@ -3,7 +3,7 @@ from src.core.errors.already_exists_error import AlreadyExistsError
 from src.domain.users.application.services.create_user_service import CreateUserService
 from src.test.repositories.in_memory_users_repository import InMemoryUsersRepository
 from src.test.cryptography.fake_password import FakerPassword
-from src.domain.users.application.dto.create_user_dto import CreateUserDTO
+from src.test.factories.make_user import MakeUser
 
 
 @pytest.fixture(name="fixture")
@@ -28,18 +28,15 @@ def test_created_user_successfully(
     """
     create_user_service, users_repository = fixture
 
-    dto = CreateUserDTO(
-        name="Lucas Camargo",
-        email="lfqcamargo@gmail.com",
-        birthday_date="22/11/1995",
-        password="123456789",
-    )
+    dto = MakeUser(
+        email="lfqcamargo@gmail.com.br", password="123456789"
+    ).make_user_dto()
 
     result = create_user_service.execute(dto)
 
     assert result is None
     assert len(users_repository.items) == 1
-    assert users_repository.items[0].get_email() == dto.email
+    assert users_repository.items[0].get_email() == "lfqcamargo@gmail.com.br"
     assert users_repository.items[0].get_password() == "hashed_123456789"
 
 
@@ -52,12 +49,7 @@ def test_error_when_trying_to_create_with_duplicate_email(
     """
     create_user_service, _ = fixture
 
-    dto = CreateUserDTO(
-        name="Lucas Camargo",
-        email="lfqcamargo@gmail.com",
-        birthday_date="22/11/1995",
-        password="123456789",
-    )
+    dto = MakeUser(email="lfqcamargo@gmail.com.br").make_user_dto()
 
     create_user_service.execute(dto)
     result = create_user_service.execute(dto)
