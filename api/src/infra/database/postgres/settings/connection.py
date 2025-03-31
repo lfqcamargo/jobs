@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 from src.infra.database.interfaces.db_connection_handler_interface import (
     DBConnectionHandlerInterface,
 )
+from .configs import database_configs
 
 load_dotenv()
 
@@ -15,10 +16,7 @@ class DBConnectionHandler(DBConnectionHandlerInterface):
     """
 
     def __init__(self) -> None:
-        self.__connection_string = (
-            f"postgresql://{os.getenv('DB_USER')}:{os.getenv('DB_PASSWORD')}"
-            f"@{os.getenv('DB_HOST')}:{os.getenv('DB_PORT')}/{os.getenv('DB_NAME')}"
-        )
+        self.__connection_string = f"{database_configs.DATABASE_URL}"
         self.__engine = None
         self.session = None
 

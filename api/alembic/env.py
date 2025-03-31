@@ -14,7 +14,7 @@ from alembic import context
 config = context.config
 if os.getenv("ENV") == "test":
     # Se for ambiente de teste, usar o banco de dados de teste
-    config.set_main_option("sqlalchemy.url", os.getenv("TEST_DATABASE_URL"))
+    config.set_main_option("sqlalchemy.url", os.getenv("DATABASE_URL_TEST"))
 else:
     # Caso contrário, usar o banco de dados de produçãos
     config.set_main_option("sqlalchemy.url", os.getenv("DATABASE_URL"))
