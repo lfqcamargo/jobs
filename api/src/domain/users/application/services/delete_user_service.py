@@ -24,12 +24,13 @@ class DeleteUserService:
         """
         self.__users_repository = users_repository
 
-    def execute(self, identifier: int) -> None | ResourceNotFoundError:
+    def execute(self, identifier: int) -> None | ResourceNotFoundError | DomainError:
         """
         Executes the user deletion process.
 
         This method checks if the user with the given identifier exists. If the user is found,
-        it proceeds to delete the user. If the user is not found, a `ResourceNotFoundError` is raised.
+        it proceeds to delete the user. If the user is not found,
+        a `ResourceNotFoundError` is raised.
 
         Args:
             identifier (int): The identifier of the user to be deleted.
@@ -39,7 +40,7 @@ class DeleteUserService:
             DomainError: If an error occurs during the deletion process.
 
         Returns:
-            None | ResourceNotFoundError
+            None | ResourceNotFoundError | DomainError
         """
         user = self.__users_repository.find_by_identifier(identifier)
 

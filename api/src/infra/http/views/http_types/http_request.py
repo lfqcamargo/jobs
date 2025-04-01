@@ -24,7 +24,7 @@ class HttpRequest:
             param (Optional[Dict[str, Any]]): Additional parameters for the HTTP request.
         """
         self.body = body or {}
-        self.param = params or {}
+        self.params = params or {}
         self.headers = headers or {}
         self.token_infos = token_infos or {}
         self.files = files or {}
