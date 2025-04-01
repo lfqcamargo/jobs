@@ -1,3 +1,19 @@
+# version: '3.8'
+
+# services:
+#   postgres:
+#     container_name: jobs_test-pg
+#     image: postgres
+#     ports:
+#       - 5433:5433
+#     environment:
+#       POSTGRES_USER: admin
+#       POSTGRES_PASSWORD: admin
+#       POSTGRES_DB: jobs_test
+#       PGDATA: /data/postgres_test
+#     volumes:
+#       - ./data_test/pg:/data/postgres_test
+
 version: '3.8'
 
 services:

@@ -19,30 +19,23 @@ logger = logging.getLogger(__name__)
 def client():
     """Configuração do cliente de teste"""
 
-    os.environ["ENV"] = "test"
-    print("Variavel=", os.environ["ENV"])
-
     app = create_app()
 
-    # app = create_app()
-    # app.config["TESTING"] = True
+    app.config["TESTING"] = True
 
-    # # Rodar as migrações com Alembic
-    # with app.app_context():
-    #     alembic_cfg = Config("alembic.ini")
-    #     try:
-    #         logger.info("Aplicando migrações Alembic...")
-    #         command.upgrade(
-    #             alembic_cfg, "head"
-    #         )  # Aplica as migrações no banco de dados de teste
-    #         logger.info("Migrações aplicadas com sucesso.")
-    #     except Exception as e:
-    #         logger.error(f"Erro ao aplicar migrações: {e}")
-    #         raise
+    with app.app_context():
+        alembic_cfg = Config("alembic.ini")
+        try:
+            logger.info("Aplicando migrações Alembic...")
+            command.upgrade(alembic_cfg, "head")
+            logger.info("Migrações aplicadas com sucesso.")
+        except Exception as e:
+            logger.error(f"Erro ao aplicar migrações: {e}")
+            raise
 
-    # # Criação do cliente de teste
-    # with app.test_client() as client:
-    #     yield client
+    # Criação do cliente de teste
+    with app.test_client() as client:
+        yield client
 
 
 def test(client):

@@ -1,13 +1,9 @@
-import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from dotenv import load_dotenv
 from src.infra.database.interfaces.db_connection_handler_interface import (
     DBConnectionHandlerInterface,
 )
 from .configs import database_configs
-
-load_dotenv()
 
 
 class DBConnectionHandler(DBConnectionHandlerInterface):

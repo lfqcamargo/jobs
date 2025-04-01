@@ -12,7 +12,7 @@ user_route_bp = Blueprint("users_routes", __name__)
 
 
 @user_route_bp.route("/users", methods=["POST"])
-def run_linkedin() -> tuple[Response, any]:
+def create_user() -> tuple[Response, any]:
     """
     Endpoint to create a new user.
 
