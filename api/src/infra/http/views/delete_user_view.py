@@ -27,7 +27,7 @@ class DeleteUserView(ViewInterface):
 
     def handle(self, http_request: HttpRequest) -> HttpResponse:
         delete_user_validator(http_request)
-        user_id = http_request.params["id"]
+        user_id = http_request.params["identifier"]
 
         self.__controller.handle(identifier=user_id)
 

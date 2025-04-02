@@ -3,7 +3,7 @@ import { api } from '@/lib/axios'
 export interface FetchUsersResponse {
   users: [
     {
-      id: string
+      id: number
       name: string
       email: string
       birthday_date: string

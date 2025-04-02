@@ -19,10 +19,9 @@ def delete_user_validator(http_request: HttpRequest) -> None:
         Validate Param Schema for Delete User
         """
 
-        id: int
+        identifier: int
 
     try:
         ParamData(**http_request.params)
     except ValidationError as error:
-        print("RECUSANDO")
-        raise HttpValidationParamError("Required parameter: id") from error
+        raise HttpValidationParamError("Required parameter: identifier") from error

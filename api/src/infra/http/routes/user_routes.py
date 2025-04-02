@@ -32,8 +32,8 @@ def create_user() -> tuple[Response, any]:
     return jsonify(http_response.body), http_response.status_code
 
 
-@user_route_bp.route("/users/<int:id>", methods=["DELETE"])
-def delete_user(id: int) -> tuple[Response, any]:
+@user_route_bp.route("/users/<int:identifier>", methods=["DELETE"])
+def delete_user(identifier: int) -> tuple[Response, any]:
     """
     Endpoint to delete a user by ID.
 
@@ -47,7 +47,7 @@ def delete_user(id: int) -> tuple[Response, any]:
     Returns:
         tuple[Response, Any]: A tuple containing the formatted JSON response and HTTP status code.
     """
-    http_request = HttpRequest(params={"id": id})
+    http_request = HttpRequest(params={"identifier": identifier})
     view = delete_user_composer()
     http_response = view.handle(http_request)
 
@@ -55,7 +55,7 @@ def delete_user(id: int) -> tuple[Response, any]:
 
 
 @user_route_bp.route("/users/<int:id>", methods=["PUT"])
-def edit_user(id: int) -> tuple[HttpResponse, any]:
+def edit_user(identifier: int) -> tuple[HttpResponse, any]:
     """
     Endpoint to edit an existing user by ID.
 
@@ -71,7 +71,7 @@ def edit_user(id: int) -> tuple[HttpResponse, any]:
         response and HTTP status code.
     """
     body = request.get_json()
-    http_request = HttpRequest(body=body, params={"id": id})
+    http_request = HttpRequest(body=body, params={"identifier": identifier})
     view = edit_user_composer()
     http_response = view.handle(http_request)
     return jsonify(http_response.body), http_response.status_code
