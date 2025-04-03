@@ -15,6 +15,7 @@ import { CreateUserForm } from './components/create-user-form'
 import { deleteUser } from '@/api/delete-user'
 import axios from 'axios'
 import { toast } from 'sonner'
+import { EditUser } from './components/edit-user'
 
 export function Users() {
     const { data: users, refetch } = useQuery({
@@ -103,7 +104,16 @@ export function Users() {
                                 'Nenhum arquivo'
                             )}
                         </TableCell>
-                        <TableCell><Button variant={'default'}>Editar</Button></TableCell>
+                        <TableCell>
+                            <EditUser 
+                                id={user.id}
+                                name={user.name}
+                                email={user.email}
+                                birthday_date={user.birthday_date}
+                                curriculum={user.curriculum}
+                                refetch={refetch}
+                            />
+                        </TableCell>
                         <TableCell>
                             <Button 
                                 onClick={() => handleDeleteUser(user.id)} 

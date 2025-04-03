@@ -16,7 +16,6 @@ def load_database_config() -> DatabaseConfig:
     env = dotenv_values().get("ENV")
 
     if "test" in env.lower():
-        print("CARREGANDO TEST")
         return DatabaseConfig(
             DB_USER=os.getenv("DB_USER_TEST"),
             DB_PASSWORD=os.getenv("DB_PASSWORD_TEST"),
@@ -26,7 +25,6 @@ def load_database_config() -> DatabaseConfig:
             DATABASE_URL=os.getenv("DATABASE_URL_TEST"),
         )
     else:
-        print("CARREGANDO PROD")
         return DatabaseConfig(
             DB_USER=os.getenv("DB_USER"),
             DB_PASSWORD=os.getenv("DB_PASSWORD"),
