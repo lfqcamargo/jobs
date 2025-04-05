@@ -9,14 +9,12 @@ class EditSkillDTO:
 
     def __init__(
         self,
-        description: str,
-        time_month: int,
-        level: str,
-        user_id: int,
         identifier: int,
+        description: str = None,
+        time_month: int = None,
+        level: str = None,
     ) -> None:
         self.identifier = identifier
         self.description = description
         self.time_month = time_month
         self.level = level
-        self.user_id = user_id

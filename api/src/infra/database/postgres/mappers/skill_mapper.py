@@ -1,5 +1,6 @@
 from src.infra.database.postgres.models.skill_model import SkillModel
 from src.domain.users.enterprise.entities.skill import Skill
+from src.domain.users.enterprise.enums.skill_level import SkillLevel
 from src.domain.users.application.dto.create_skill_dto import CreateSkillDTO
 
 
@@ -20,10 +21,11 @@ class SkillMapper:
             Skill: A domain entity representing the skill.
         """
         dto = CreateSkillDTO(
+            identifier=raw.id,
+            user_id=raw.user_id,
             description=raw.description,
             time_month=raw.time_month,
             level=raw.level,
-            user_id=raw.user_id,
         )
         return Skill.create(dto)
 

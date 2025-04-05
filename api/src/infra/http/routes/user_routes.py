@@ -54,7 +54,7 @@ def delete_user(identifier: int) -> tuple[Response, any]:
     return jsonify(http_response.body), http_response.status_code
 
 
-@user_route_bp.route("/users/<int:id>", methods=["PUT"])
+@user_route_bp.route("/users/<int:identifier>", methods=["PUT"])
 def edit_user(identifier: int) -> tuple[HttpResponse, any]:
     """
     Endpoint to edit an existing user by ID.
@@ -70,8 +70,12 @@ def edit_user(identifier: int) -> tuple[HttpResponse, any]:
         tuple[HttpResponse, any]: A tuple containing the formatted JSON
         response and HTTP status code.
     """
-    body = request.get_json()
-    http_request = HttpRequest(body=body, params={"identifier": identifier})
+    files = request.files.get("curriculum")
+    body = json.loads(request.form.get("json_data"))
+    http_request = HttpRequest(
+        params={"identifier": identifier}, body=body, files=files
+    )
+
     view = edit_user_composer()
     http_response = view.handle(http_request)
     return jsonify(http_response.body), http_response.status_code

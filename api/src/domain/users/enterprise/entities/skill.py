@@ -80,14 +80,14 @@ class Skill(Entity):
         """
         self.__time_month = time_month
 
-    def get_level(self) -> str:
+    def get_level(self) -> SkillLevel:
         """
         Retrieve the skill's level.
 
         Returns:
             str: The level of the skill.
         """
-        return self.__level
+        return SkillLevel(self.__level)
 
     def set_level(self, level: str) -> None:
         """

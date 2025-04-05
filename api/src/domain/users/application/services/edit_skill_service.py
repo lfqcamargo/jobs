@@ -44,9 +44,14 @@ class EditSkillService:
                 message="Habilidade não encontrada.", resource="Habilidade"
             )
 
-        skill.set_description(props.description)
-        skill.set_level(props.level)
-        skill.set_time_month(props.time_month)
+        if props.description is not None:
+            skill.set_description(props.description)
+
+        if props.level is not None:
+            skill.set_level(props.level)
+
+        if props.time_month is not None:
+            skill.set_time_month(props.time_month)
 
         result = self.__skills_repository.save(skill)
 

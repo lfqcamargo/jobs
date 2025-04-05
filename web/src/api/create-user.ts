@@ -5,7 +5,7 @@ export interface CreateUserRequest {
   email: string
   password: string
   birthdayDate: string
-  curriculum: File | string 
+  curriculum: File
 }
 
 export async function createUser({
@@ -24,7 +24,6 @@ export async function createUser({
         birthday_date: birthdayDate,
       }))
 
-    console.log(curriculum[0])
     formData.append('curriculum', curriculum[0])
     
     await api.post('/users', formData, {

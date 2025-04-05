@@ -1,3 +1,4 @@
+from typing import Optional
 from pydantic import BaseModel, ValidationError, EmailStr, Field
 from src.infra.http.views.http_types.http_request import HttpRequest
 
@@ -18,10 +19,10 @@ def edit_user_validator(http_request: HttpRequest) -> None:
         Validate Body Schema for Editing User
         """
 
-        name: str = Field(..., min_length=3, max_length=50, required=False)
-        email: EmailStr = Field(..., required=False)
-        password: str = Field(..., min_length=8, max_length=100, required=False)
-        birthday_date: str = Field(..., min_length=10, max_length=10, required=False)
+        name: Optional[str] = Field(min_length=3, max_length=50, default=None)
+        email: Optional[EmailStr] = Field(default=None)
+        password: Optional[str] = Field(min_length=8, max_length=100, default=None)
+        birthday_date: Optional[str] = Field(min_length=10, max_length=10, default=None)
 
     try:
         BodyData(**http_request.body)
@@ -33,5 +34,5 @@ def edit_user_validator(http_request: HttpRequest) -> None:
         if curriculum.mimetype != "application/pdf":
             raise ValueError("Curriculum must be a PDF file.")
 
-    if "id" not in http_request.params:
+    if "identifier" not in http_request.params:
         raise ValueError("User ID is required for editing.")

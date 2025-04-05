@@ -27,16 +27,53 @@ class SkillsRepository(SkillsRepositoryInterface):
                 database.session.add(skill_model)
                 database.session.commit()
                 return True
+            except Exception as e:
+                print(e)
+                return False
+
+    def find_by_identifier(self, identifier: int) -> Skill | None:
+        with self.__db_connection as database:
+            skill_model = (
+                database.session.query(SkillModel).filter_by(id=identifier).first()
+            )
+            return SkillMapper.to_domain(skill_model) if skill_model else None
+
+    def fetch_all_by_user(self, user_id: int) -> list[Skill]:
+        with self.__db_connection as database:
+            skills_model = (
+                database.session.query(SkillModel).filter_by(user_id=user_id).all()
+            )
+            return [SkillMapper.to_domain(skill) for skill in skills_model]
+
+    def save(self, skill: Skill) -> bool:
+        with self.__db_connection as database:
+            try:
+                skill_model = (
+                    database.session.query(SkillModel)
+                    .filter_by(id=skill.get_identifier())
+                    .first()
+                )
+                if not skill_model:
+                    return False
+
+                skill_model.description = skill.get_description()
+                skill_model.level = skill.get_level()
+                skill_model.time_month = skill.get_time_month()
+                database.session.commit()
+                return True
             except Exception:
                 return False
 
-    def fetch_all(self) -> list[Skill] | None:
+    def delete(self, identifier: int) -> bool:
         with self.__db_connection as database:
-            skills_model = database.session.query(SkillModel).all()
-            if skills_model:
-                skills = []
-                for skill in skills_model:
-                    skills.append(SkillMapper.to_domain(skill))
-
-                return skills
-            return None
+            try:
+                skill_model = (
+                    database.session.query(SkillModel).filter_by(id=identifier).first()
+                )
+                if not skill_model:
+                    return False
+                database.session.delete(skill_model)
+                database.session.commit()
+                return True
+            except Exception:
+                return False

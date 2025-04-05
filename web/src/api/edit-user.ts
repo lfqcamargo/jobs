@@ -6,7 +6,7 @@ export interface EditUserRequest {
   email: string | undefined
   password: string | undefined
   birthdayDate: string | undefined
-  curriculum: File | string  | undefined
+  curriculum: File  | undefined
 }
 
 export async function editUser({

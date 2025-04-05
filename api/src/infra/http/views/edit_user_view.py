@@ -29,7 +29,7 @@ class EditUserView(ViewInterface):
     def handle(self, http_request: HttpRequest) -> HttpResponse:
         edit_user_validator(http_request)
 
-        identifier = http_request.params["id"]
+        identifier = http_request.params["identifier"]
         name = http_request.body.get("name", None)
         email = http_request.body.get("email", None)
         password = http_request.body.get("password", None)
