@@ -4,3 +4,4 @@ data/
 __pycache__
 manager.py
 pdf.pdf
+.pytest_cache

@@ -3,8 +3,6 @@ from src.core.errors.resource_not_found_error import ResourceNotFoundError
 from src.domain.users.application.services.fetch_skills_service import (
     FetchSkillsService,
 )
-from src.domain.users.enterprise.entities.skill import Skill
-from src.domain.users.enterprise.enums.skill_level import SkillLevel
 from src.test.repositories.in_memory_skills_repository import InMemorySkillsRepository
 from src.test.repositories.in_memory_users_repository import InMemoryUsersRepository
 from src.test.factories.make_skill import MakeSkill

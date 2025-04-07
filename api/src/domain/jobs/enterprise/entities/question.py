@@ -1,5 +1,6 @@
 from datetime import datetime
 from src.core.entities.entity import Entity
+from src.domain.jobs.enterprise.enums.question_types import QuestionTypes
 from src.domain.jobs.application.dto.create_question_dto import CreateQuestionDTO
 
 
@@ -18,6 +19,7 @@ class Question(Entity):
         date_time: datetime,
         question: str,
         response: str,
+        question_type: QuestionTypes,
         identifier: int = 0,
     ) -> None:
         """
@@ -27,6 +29,8 @@ class Question(Entity):
             company_id (int): The ID of the company associated with the question.
             user_id (int): The ID of the user who asked the question.
             date_time (datetime): The timestamp when the question was asked.
+            question_type (QuestionTypes): The type of the question input (e.g., text,
+            number, date).
             question (str): The content of the question.
             response (str): The answer to the question.
             identifier (int, optional): The unique identifier of the question. Defaults to 0.
@@ -35,6 +39,7 @@ class Question(Entity):
         self.__company_id = company_id
         self.__user_id = user_id
         self.__date_time = date_time
+        self.__question_type = question_type
         self.__question = question
         self.__response = response
 
@@ -65,6 +70,16 @@ class Question(Entity):
         """
         return self.__date_time
 
+    def get_question_type(self) -> QuestionTypes:
+        """
+        Retrieve the type of the question input.
+
+        Returns:
+            QuestionTypes: The type of input associated with the question (e.g., text,
+            number, date).
+        """
+        return self.__question_type
+
     def get_question(self) -> str:
         """
         Retrieve the content of the question.
@@ -83,6 +98,42 @@ class Question(Entity):
         """
         return self.__response
 
+    def set_date_time(self, date_time: datetime) -> None:
+        """
+        Set the timestamp when the question was asked.
+
+        Args:
+            date_time (datetime): The new date and time to set.
+        """
+        self.__date_time = date_time
+
+    def set_question_type(self, question_type: QuestionTypes) -> None:
+        """
+        Set the type of the question input.
+
+        Args:
+            question_type (QuestionTypes): The new type of input associated with the question.
+        """
+        self.__question_type = question_type
+
+    def set_question(self, question: str) -> None:
+        """
+        Set the content of the question.
+
+        Args:
+            question (str): The new question content.
+        """
+        self.__question = question
+
+    def set_response(self, response: str) -> None:
+        """
+        Set the response to the question.
+
+        Args:
+            response (str): The new response content.
+        """
+        self.__response = response
+
     @staticmethod
     def create(props: CreateQuestionDTO) -> "Question":
         """
@@ -99,6 +150,7 @@ class Question(Entity):
             company_id=props.company_id,
             user_id=props.user_id,
             date_time=props.date_time,
+            question_type=props.question_type,
             question=props.question,
             response=props.response,
             identifier=props.identifier,
