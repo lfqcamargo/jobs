@@ -25,7 +25,7 @@ class FetchQuestionsController(FetchQuestionsControllerInterface):
         """
         self.__service = service
 
-    def handle(self, user_id: int, company: Optional[int] = None) -> list[Question]:
+    def handle(self, user_id: int, company_id: Optional[int] = None) -> list[Question]:
         """
         Executes the fetch operation via the service.
 
@@ -39,7 +39,7 @@ class FetchQuestionsController(FetchQuestionsControllerInterface):
         Raises:
             ResourceNotFoundError: If no questions exist for the user.
         """
-        result = self.__service.execute(user_id=user_id, company=company)
+        result = self.__service.execute(user_id=user_id, company_id=company_id)
 
         if isinstance(result, ResourceNotFoundError):
             raise result

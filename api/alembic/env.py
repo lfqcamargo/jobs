@@ -31,6 +31,7 @@ if config.config_file_name is not None:
 from src.infra.database.postgres.models.company_model import CompanyModel
 from src.infra.database.postgres.models.user_model import UserModel
 from src.infra.database.postgres.models.skill_model import SkillModel
+from src.infra.database.postgres.models.question_model import QuestionModel
 
 target_metadata = Base.metadata
 

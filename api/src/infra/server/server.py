@@ -4,6 +4,7 @@ from flask_cors import CORS
 from src.infra.database.postgres.settings.connection import db_connection_handler
 from src.infra.http.routes.user_routes import user_route_bp
 from src.infra.http.routes.skill_routes import skill_route_bp
+from src.infra.http.routes.question_routes import question_route_bp
 from src.infra.scripts.init_data_database import init_data_database
 from src.infra.http.middlewares.error_middleware import error_middleware
 
@@ -23,6 +24,7 @@ def create_app() -> Flask:
 
     app.register_blueprint(user_route_bp)
     app.register_blueprint(skill_route_bp)
+    app.register_blueprint(question_route_bp)
 
     @app.errorhandler(Exception)
     def middleware_error(error) -> any:

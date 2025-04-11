@@ -78,7 +78,7 @@ class Question(Entity):
             QuestionTypes: The type of input associated with the question (e.g., text,
             number, date).
         """
-        return self.__question_type
+        return QuestionTypes(self.__question_type)
 
     def get_question(self) -> str:
         """
@@ -89,7 +89,7 @@ class Question(Entity):
         """
         return self.__question
 
-    def get_response(self) -> str:
+    def get_response(self) -> str | None:
         """
         Retrieve the response to the question.
 

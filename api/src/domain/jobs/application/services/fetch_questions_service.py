@@ -29,7 +29,7 @@ class FetchQuestionsService:
         self.__questions_repository = questions_repository
 
     def execute(
-        self, user_id: int, company: Optional[int] = None
+        self, user_id: int, company_id: Optional[int] = None
     ) -> list[Question] | ResourceNotFoundError:
         """
         Retrieves the list of questions for a specific user, optionally filtering by company.
@@ -48,7 +48,7 @@ class FetchQuestionsService:
         Raises:
             ResourceNotFoundError: If no questions are found for the specified user.
         """
-        questions = self.__questions_repository.fetch_all_by_user(user_id, company)
+        questions = self.__questions_repository.fetch_all_by_user(user_id, company_id)
 
         if not questions:
             return ResourceNotFoundError(

@@ -37,14 +37,14 @@ class QuestionsRepositoryInterface(ABC):
 
     @abstractmethod
     def fetch_all_by_user(
-        self, user_id: int, company: Optional[int] = None
+        self, user_id: int, company_id: Optional[int] = None
     ) -> list[Question]:
         """
         Retrieve all questions belonging to a specific user.
 
         Args:
             user_id (int): The user ID.
-            company (Optional[int], optional): The company ID to further filter the questions.
+            company_id (Optional[int], optional): The company ID to further filter the questions.
                                                 Defaults to None.
 
         Returns:

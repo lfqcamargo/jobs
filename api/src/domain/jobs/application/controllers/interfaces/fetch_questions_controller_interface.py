@@ -13,7 +13,7 @@ class FetchQuestionsControllerInterface(ABC):
 
     @abstractmethod
     def handle(
-        self, user_id: int, company: Optional[int] = None
+        self, user_id: int, company_id: Optional[int] = None
     ) -> Union[list[Question], ResourceNotFoundError]:
         """
         Handles the logic to fetch all questions associated with a user, optionally filtered
