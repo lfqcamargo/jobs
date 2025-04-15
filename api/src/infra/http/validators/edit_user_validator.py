@@ -23,6 +23,8 @@ def edit_user_validator(http_request: HttpRequest) -> None:
         email: Optional[EmailStr] = Field(default=None)
         password: Optional[str] = Field(min_length=8, max_length=100, default=None)
         birthday_date: Optional[str] = Field(min_length=10, max_length=10, default=None)
+        country_code: Optional[str] = Field(min_length=2, max_length=2, default=None)
+        phone_number: Optional[str] = Field(min_length=11, max_length=11, default=None)
 
     try:
         BodyData(**http_request.body)

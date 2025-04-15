@@ -1,5 +1,5 @@
 import json
-from flask import Blueprint, jsonify, Response, request
+from flask import Blueprint, jsonify, request
 from src.infra.http.views.http_types.http_request import HttpRequest
 from src.infra.http.views.http_types.http_response import HttpResponse
 from src.infra.http.composers.create_user_composer import create_user_composer
@@ -12,7 +12,7 @@ user_route_bp = Blueprint("users_routes", __name__)
 
 
 @user_route_bp.route("/users", methods=["POST"])
-def create_user() -> tuple[Response, any]:
+def create_user() -> tuple[HttpResponse, any]:
     """
     Endpoint to create a new user.
 
@@ -33,7 +33,7 @@ def create_user() -> tuple[Response, any]:
 
 
 @user_route_bp.route("/users/<int:identifier>", methods=["DELETE"])
-def delete_user(identifier: int) -> tuple[Response, any]:
+def delete_user(identifier: int) -> tuple[HttpResponse, any]:
     """
     Endpoint to delete a user by ID.
 

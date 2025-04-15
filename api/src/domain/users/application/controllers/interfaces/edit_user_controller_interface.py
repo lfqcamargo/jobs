@@ -24,6 +24,8 @@ class EditUserControllerInterface(ABC):
         password: str | None,
         birthday_date: date | None,
         curriculum: bytes | None,
+        country_code: str | None,
+        phone_number: str | None,
     ) -> None:
         """
         Handles the user editing logic.
@@ -39,6 +41,8 @@ class EditUserControllerInterface(ABC):
             password (str | None): The user's new password (optional).
             birthday_date (date | None): The user's new birthday date (optional).
             curriculum (bytes | None): The user's new curriculum file in binary format (optional).
+            country_code(str | Nonw): The country code(optional).
+            phone_number(str | Nonw): Phone number(optional).
 
         Raises:
             ResourceNotFoundError: If the user does not exist in the system.

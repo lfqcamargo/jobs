@@ -1,26 +1,20 @@
-import time
-from selenium import webdriver
-
-from selenium.webdriver.common.by import By
-
-from selenium.webdriver.support.ui import WebDriverWait
-
-from selenium.webdriver.remote.webelement import WebElement
-from selenium.webdriver.support import expected_conditions as EC
-from src.domain.jobs.application.interfaces.companies_repository_interface import (
-    CompaniesRepositoryInterface,
-)
 from src.domain.users.application.interfaces.users_repository_interface import (
     UsersRepositoryInterface,
 )
-
-from src.domain.users.enterprise.entities.user import User
 from src.domain.users.application.interfaces.password_handler_interface import (
     PasswordHandlerInterface,
 )
-from src.domain.users.application.interfaces.skills_repository_interface import (
-    SkillsRepositoryInterface,
+from src.domain.jobs.application.interfaces.companies_repository_interface import (
+    CompaniesRepositoryInterface,
 )
+from src.domain.jobs.application.interfaces.questions_repository_interface import (
+    QuestionsRepositoryInterface,
+)
+from src.domain.jobs.application.interfaces.webdriver_handler_linkedin_interface import (
+    WebDriverHandlerLinkedinInterface,
+)
+from src.domain.users.enterprise.entities.user import User
+from src.domain.jobs.enterprise.entities.company import Company
 
 
 class RunLinkedinService:
@@ -36,235 +30,76 @@ class RunLinkedinService:
         companies_repository: CompaniesRepositoryInterface,
         users_repository: UsersRepositoryInterface,
         password_handler: PasswordHandlerInterface,
-        skills_repository: SkillsRepositoryInterface,
+        questions_repository: QuestionsRepositoryInterface,
+        webdriver_handler: WebDriverHandlerLinkedinInterface,
     ) -> None:
-        """
-        Initializes the RunLinkedin process.
-
-        Args:
-            companies_repository (CompaniesRepositoryInterface): The repository to
-            retrieve company information.
-            users_repository (UsersRepositoryInterface): The repository to retrieve user information.
-            password_handler (PasswordHandlerInterface): Driver to manage user password.
-            skills_repository (SkillsRepositoryInterface): The repository to retrieve skill information.
-        """
         self.__companies_repository = companies_repository
         self.__users_repository = users_repository
         self.__password_handler = password_handler
-        self.__skills_repository = skills_repository
-        self.__webdriver = None
-        self.__linkedin = self.__companies_repository.find_by_name("Linkedin")
+        self.__questions_repository = questions_repository
+        self.__webdriver = webdriver_handler
+        self.__simplified = True
 
-    def execute(self, email: str) -> None:
+        self.__user: User = None
+        self.__company: Company = None
+
+    def execute(self, user_id: int, simplified: bool = True) -> None:
         """
-        Executes the LinkedIn access process.
+        Run Linkedin
         """
-        self.__webdriver = webdriver.Chrome()
-        self.__access_website()
-        self.__log_in(email)
-        self.__access_jobs()
-        self.__find_jobs()
+        self.__user = self.__users_repository.find_by_identifier(user_id)
+        self.__company = self.__companies_repository.find_by_name("Linkedin")
+        self.__simplified = simplified
 
-    def __access_website(self) -> None:
+        self.__access_jobs_remote()
+        self.__apply_jobs()
+
+    def __access_jobs_remote(self) -> None:
         try:
-            self.__webdriver.get(self.__linkedin.get_link())
-            self.__webdriver.maximize_window()
-            time.sleep(2)
-        except Exception:
-            pass
-
-    def __log_in(self, email: str) -> None:
-        user = self.__get_user(email)
-        if not user:
-            pass
-
-        try:
-            self.__webdriver.find_element(By.LINK_TEXT, "Entrar").click()
-            time.sleep(2)
-            form_login = self.__webdriver.find_element(By.CLASS_NAME, "login__form")
-            form_login.find_element(By.ID, "username").send_keys(user.get_email())
-            form_login.find_element(By.ID, "password").send_keys(
-                self.__password_handler.decrypt_password(user.get_password())
-            )
-            form_login.find_element(By.CSS_SELECTOR, "button[type='submit']").click()
-
-            # Wait confirmation 10 minutes
-            WebDriverWait(self.__webdriver, 600).until(
-                EC.presence_of_element_located((By.ID, "global-nav-search"))
-            )
-        except Exception:
-            pass
-
-    def __access_jobs(self) -> None:
-        try:
-            self.__webdriver.find_element(By.CSS_SELECTOR, "a[href*='jobs']").click()
-            WebDriverWait(self.__webdriver, 10).until(
-                EC.presence_of_element_located(
-                    (By.ID, "jobs-home-vertical-list__entity-list")
-                )
-            )
-            div_a = self.__webdriver.find_element(
-                By.CLASS_NAME, "discovery-templates-vertical-list__footer"
-            )
-            div_a.find_element(By.TAG_NAME, "a").click()
-
-            # Wait load
-            WebDriverWait(self.__webdriver, 20).until(
-                EC.presence_of_element_located(
-                    (By.CLASS_NAME, "scaffold-layout__list-detail-container")
-                )
-            )
-
+            self.__webdriver.open_website(self.__company.get_link())
         except Exception as e:
+            print(e)
             raise e
 
-    def __find_jobs(self) -> None:
-        while True:
-            try:
-                self.__jobs_simplified()
-            except Exception:
-                pass
-
-    def __jobs_simplified(self) -> None:
-        self.__webdriver.find_element(
-            By.XPATH, "//a[text()='Candidatura simplificada']"
-        ).click()
-        time.sleep(4)
-
-        self.__scroll_jobs()
-
-        # list_jobs = self.__get_list_jobs()
-
-        # for item in list_jobs:
-        #     div_element = item.find_element(By.TAG_NAME, "div")
-        #     div_element.find_element(By.TAG_NAME, "div").click()
-        #     time.sleep(2)
-        #     try:
-        #         self.__apply_simplified()
-        #     except Exception:
-        #         self.__webdriver.find_element(
-        #             By.CSS_SELECTOR, 'button[aria-label="Fechar"]'
-        #         ).click()
-        #         self.__webdriver.find_element(
-        #             By.CSS_SELECTOR,
-        #             'button[data-control-name="discard_application_confirm_btn"]',
-        #         ).click()
-        #         continue
-
-    def __scroll_jobs(self) -> None:
-        while True:
-            list_pages = self.__get_list_pages()
-            for index in range(len(list_pages)):
-                list_pages = self.__get_list_pages()
-                if index >= len(list_pages):
-                    break
-                li = list_pages[index]
-                try:
-                    li.find_element(By.TAG_NAME, "button").click()
-                    time.sleep(2)
-                    list_jobs = self.__get_list_jobs()
-                    for job in list_jobs:
-                        div_element = job.find_element(By.TAG_NAME, "div")
-                        self.__webdriver.execute_script(
-                            "arguments[0].scrollIntoView();", div_element
-                        )
-                        div_element.find_element(By.TAG_NAME, "div").click()
-                        time.sleep(2)
-                        try:
-                            self.__apply_simplified()
-                        except Exception:
-                            self.__webdriver.find_element(
-                                By.CSS_SELECTOR, 'button[aria-label="Fechar"]'
-                            ).click()
-                            self.__webdriver.find_element(
-                                By.CSS_SELECTOR,
-                                'button[data-control-name="discard_application_confirm_btn"]',
-                            ).click()
-                            continue
-                except Exception:
-                    pass
-
-    def __apply_simplified(self) -> None:
-        WebDriverWait(self.__webdriver, 10).until(
-            EC.presence_of_element_located(
-                (By.CLASS_NAME, "jobs-apply-button--top-card")
-            )
-        ).find_element(By.TAG_NAME, "button").click()
-        time.sleep(2)
-        self.__select_curriculum()
-        self.__fill_out_form()
-
-    def __fill_out_form(self) -> None:
         try:
-            divs_input: list[WebElement] = WebDriverWait(self.__webdriver, 10).until(
-                EC.presence_of_all_elements_located(
-                    (
-                        By.CSS_SELECTOR,
-                        ".artdeco-text-input--container.ember-view",
-                    )
-                )
+            email: str = self.__user.get_email()
+            password: str = self.__password_handler.decrypt_password(
+                self.__user.get_password()
             )
+            self.__webdriver.log_in(email, password)
+        except Exception as e:
+            print(e)
+            raise e
 
-            for divs in divs_input:
-                label = divs.find_element(By.TAG_NAME, "label").text
-                input_container = divs.find_element(By.TAG_NAME, "input")
-                time.sleep(1)
-                input_container.send_keys(self.__get_input_response(label))
+        try:
+            self.__webdriver.access_jobs()
+        except Exception as e:
+            print(e)
+            raise e
 
-        except Exception:
-            pass
+    def __apply_jobs(self) -> None:
+        total_pages: int = self.__webdriver.get_total_pages()
 
-    def __select_curriculum(self) -> None:
-        WebDriverWait(self.__webdriver, 10).until(
-            EC.presence_of_element_located(
-                (
-                    By.CSS_SELECTOR,
-                    ".artdeco-button.artdeco-button--2.artdeco-button--primary.ember-view",
-                )
-            )
-        ).click()
+        for page in range(total_pages):
+            total_jobs: int = self.__webdriver.get_total_jobs()
 
-        label = WebDriverWait(self.__webdriver, 10).until(
-            EC.presence_of_element_located(
-                (
-                    By.CSS_SELECTOR,
-                    ".jobs-document-upload-redesign-card__toggle-label.t-bold",
-                )
-            )
-        )
-        radio_button = label.find_element(
-            By.XPATH, "./preceding-sibling::input[@type='radio']"
-        )
-        if not radio_button.is_selected():
-            label.click()
-        time.sleep(2)
+            for job_number in range(total_jobs):
+                self.__webdriver.select_job(job_number)
 
-        WebDriverWait(self.__webdriver, 10).until(
-            EC.presence_of_element_located(
-                (
-                    By.CSS_SELECTOR,
-                    ".artdeco-button.artdeco-button--2.artdeco-button--primary.ember-view",
-                )
-            )
-        ).click()
-        time.sleep(2)
+                is_simplified = self.__webdriver.check_simplified_application()
 
-    def __get_input_response(self, label: str) -> any:
-        print(label)
+                if self.__simplified is True and is_simplified is True:
+                    self.__apply_job()
+                else:
+                    continue
 
-    def __get_list_pages(self) -> list[WebElement]:
-        ul_paginator = self.__webdriver.find_element(
-            By.CSS_SELECTOR,
-            ".artdeco-pagination__pages.artdeco-pagination__pages--number",
-        )
-        list_pages = ul_paginator.find_elements(By.TAG_NAME, "li")
-        return list_pages
+            self.__webdriver.next_page()
 
-    def __get_list_jobs(self) -> list[WebElement]:
-        return self.__webdriver.find_elements(
-            By.CSS_SELECTOR,
-            ".scaffold-layout__list > div > ul > li",
-        )
+    def __apply_job(self) -> None:
+        self.__webdriver.click_apply()
 
-    def __get_user(self, email: str) -> User:
-        return self.__users_repository.find_by_email(email)
+        try:
+            self.__webdriver.fill_contact_information()
+        except Exception as e:
+            print("Erro ao Tentar Preencher Informações de Contato.")
+            print(e)

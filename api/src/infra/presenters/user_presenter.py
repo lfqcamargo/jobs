@@ -28,4 +28,6 @@ class UserPresenter:
             "email": user.get_email(),
             "birthday_date": user.get_birthday_date(),
             "curriculum": base64.b64encode(user.get_curriculum()).decode("utf-8"),
+            "country_code": user.get_country_code(),
+            "phone_number": user.get_phone_number(),
         }

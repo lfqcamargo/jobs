@@ -1,11 +1,11 @@
-from pydantic import BaseModel, ValidationError, EmailStr
+from pydantic import BaseModel, ValidationError
 from src.infra.http.views.http_types.http_request import HttpRequest
 from ..middlewares.error_types.http_validation_param import HttpValidationParamError
 
 
-def validate_request_params(http_request: HttpRequest) -> None:
+def run_linkedin_validator(http_request: HttpRequest) -> None:
     """
-    Validates the parameters in the given HTTP request.
+    Validates the parameters in the given HTTP request for run linkedin.
 
     Args:
         http_request (HttpRequest): The HTTP request containing the parameters.
@@ -16,12 +16,12 @@ def validate_request_params(http_request: HttpRequest) -> None:
 
     class ParamData(BaseModel):
         """
-        Validate Param Schema
+        Validate Param Schema for Run Linkedin
         """
 
-        email: EmailStr
+        user_id: int
 
     try:
-        ParamData(**http_request.param)
+        ParamData(**http_request.params)
     except ValidationError as error:
-        raise HttpValidationParamError("required parameters: email") from error
+        raise HttpValidationParamError("Required parameter: user_id") from error

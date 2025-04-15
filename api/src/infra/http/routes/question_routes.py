@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, Response, request
+from flask import Blueprint, jsonify, request
 from src.infra.http.views.http_types.http_request import HttpRequest
 from src.infra.http.views.http_types.http_response import HttpResponse
 from src.infra.http.composers.create_question_composer import create_question_composer
@@ -12,7 +12,7 @@ question_route_bp = Blueprint("questions_routes", __name__)
 @question_route_bp.route(
     "/users/<int:user_id>/company/<int:company_id>/questions", methods=["POST"]
 )
-def create_question(user_id: int, company_id: int) -> tuple[Response, any]:
+def create_question(user_id: int, company_id: int) -> tuple[HttpResponse, any]:
     """
     Create a new question.
 
@@ -32,7 +32,7 @@ def create_question(user_id: int, company_id: int) -> tuple[Response, any]:
 
 
 @question_route_bp.route("/questions/<int:identifier>", methods=["DELETE"])
-def delete_question(identifier: int) -> tuple[Response, any]:
+def delete_question(identifier: int) -> tuple[HttpResponse, any]:
     """
     Delete a question by its ID.
 

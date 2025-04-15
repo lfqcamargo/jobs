@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, Response, request
+from flask import Blueprint, jsonify, request
 from src.infra.http.views.http_types.http_request import HttpRequest
 from src.infra.http.views.http_types.http_response import HttpResponse
 from src.infra.http.composers.create_skill_composer import create_skill_composer
@@ -10,7 +10,7 @@ skill_route_bp = Blueprint("skills_routes", __name__)
 
 
 @skill_route_bp.route("/users/<int:user_id>/skills", methods=["POST"])
-def create_skill(user_id: int) -> tuple[Response, any]:
+def create_skill(user_id: int) -> tuple[HttpResponse, any]:
     """
     Create a new skill.
 
@@ -28,7 +28,7 @@ def create_skill(user_id: int) -> tuple[Response, any]:
 
 
 @skill_route_bp.route("/skills/<int:identifier>", methods=["DELETE"])
-def delete_skill(identifier: int) -> tuple[Response, any]:
+def delete_skill(identifier: int) -> tuple[HttpResponse, any]:
     """
     Delete a skill by its ID.
 

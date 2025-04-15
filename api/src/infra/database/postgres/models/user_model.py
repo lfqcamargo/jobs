@@ -17,3 +17,5 @@ class UserModel(Base):
     password = Column(String(300), nullable=False)
     birthday_date = Column(Date, nullable=False)
     curriculum = Column(LargeBinary, nullable=False)
+    country_code = Column(String(2), nullable=False)
+    phone_number = Column(String(11), nullable=False)

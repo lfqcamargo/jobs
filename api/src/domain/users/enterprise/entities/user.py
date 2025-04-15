@@ -18,6 +18,8 @@ class User(Entity):
         password: str,
         birthday_date: date,
         curriculum: bytes,
+        country_code: str,
+        phone_number: str,
         identifier: int = 0,
     ) -> None:
         """
@@ -29,6 +31,8 @@ class User(Entity):
             password (str): The user's password.
             birthday_date (date): The birthday date of the user.
             curriculum (bytes, optional): The user's curriculum stored as binary data.
+            country_code(str): The country code.
+            phone_number(str): Phone number.
             identifier (int, optional): The unique identifier of the user. Defaults to 0.
         """
         super().__init__(identifier)
@@ -37,6 +41,8 @@ class User(Entity):
         self.__password = password
         self.__birthday_date = birthday_date
         self.__curriculum = curriculum
+        self.__country_code = country_code
+        self.__phone_number = phone_number
 
     def get_name(self) -> str:
         """
@@ -128,6 +134,42 @@ class User(Entity):
         """
         self.__curriculum = curriculum
 
+    def get_country_code(self) -> str:
+        """
+        Retrieve the user's country code.
+
+        Returns:
+            str: The country_code of the user.
+        """
+        return self.__country_code
+
+    def set_country_code(self, country_code: str) -> None:
+        """
+        Set the user's country_code.
+
+        Args:
+            country_code (str): The country_code to be set for the user.
+        """
+        self.__password = country_code
+
+    def get_phone_number(self) -> str:
+        """
+        Retrieve the user's phone number.
+
+        Returns:
+            str: The phone number of the user.
+        """
+        return self.__phone_number
+
+    def set_phone_number(self, phone_number: str) -> None:
+        """
+        Set the user's phone_number.
+
+        Args:
+            phone_number (str): The phone number to be set for the user.
+        """
+        self.__password = phone_number
+
     @staticmethod
     def create(props: CreateUserDTO) -> "User":
         """
@@ -146,6 +188,8 @@ class User(Entity):
             birthday_date=props.birthday_date,
             identifier=props.identifier,
             curriculum=props.curriculum,
+            country_code=props.country_code,
+            phone_number=props.phone_number,
         )
 
         return user

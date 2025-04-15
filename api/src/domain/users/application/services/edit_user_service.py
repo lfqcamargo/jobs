@@ -78,6 +78,12 @@ class EditUserService:
         if props.curriculum is not None:
             user.set_curriculum(props.curriculum)
 
+        if props.country_code is not None:
+            user.set_country_code(props.country_code)
+
+        if props.phone_number is not None:
+            user.set_phone_number(props.phone_number)
+
         result = self.__users_repository.save(user)
 
         if result is False:

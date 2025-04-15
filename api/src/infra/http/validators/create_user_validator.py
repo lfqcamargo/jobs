@@ -22,6 +22,8 @@ def create_user_validator(http_request: HttpRequest) -> None:
         email: EmailStr
         password: str = Field(..., min_length=8, max_length=100)
         birthday_date: str = Field(..., min_length=10, max_length=10)
+        country_code: str = Field(..., min_length=2, max_length=2)
+        phone_number: str = Field(..., min_length=11, max_length=11)
 
     try:
         BodyData(**http_request.body)

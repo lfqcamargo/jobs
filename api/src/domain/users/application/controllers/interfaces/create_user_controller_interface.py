@@ -11,7 +11,7 @@ class CreateUserControllerInterface(ABC):
 
     Methods:
         handle(name: str, email: str, password: str, birthday_date: date,
-        curriculum: bytes) -> None:
+        curriculum: bytes, country_code: str, phone_number: str) -> None:
             Handles the user creation logic. This method is implemented in the controller.
     """
 
@@ -23,6 +23,8 @@ class CreateUserControllerInterface(ABC):
         password: str,
         birthday_date: date,
         curriculum: bytes,
+        country_code: str,
+        phone_number: str,
     ) -> None:
         """
         Handles the user creation logic.
@@ -37,6 +39,8 @@ class CreateUserControllerInterface(ABC):
             password (str): The user's password.
             birthday_date (date): The user's birthday date.
             curriculum (bytes): The user's curriculum file in binary format (bytes).
+            country_code(str): The country code.
+            phone_number(str): Phone number.
 
         Raises:
             AlreadyExistsError: If the user already exists in the system.

@@ -6,6 +6,7 @@ from src.infra.http.views.http_types.http_request import HttpRequest
 from src.infra.http.views.http_types.http_response import HttpResponse
 from .interfaces.view_interface import ViewInterface
 from ..validators.create_user_validator import create_user_validator
+from werkzeug.datastructures import FileStorage
 
 
 class CreateUserView(ViewInterface):
@@ -36,7 +37,9 @@ class CreateUserView(ViewInterface):
         name = http_request.body["name"]
         email = http_request.body["email"]
         password = http_request.body["password"]
-        curriculum = http_request.files
+        country_code = http_request.body["country_code"]
+        phone_number = http_request.body["phone_number"]
+        curriculum: FileStorage = http_request.files
 
         curriculum = http_request.files.read()
 
@@ -46,6 +49,8 @@ class CreateUserView(ViewInterface):
             password=password,
             birthday_date=birthday_date,
             curriculum=curriculum,
+            country_code=country_code,
+            phone_number=phone_number,
         )
 
         return HttpResponse(status_code=201, body=body_response)

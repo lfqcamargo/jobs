@@ -17,7 +17,7 @@ class CreateUserController(CreateUserControllerInterface):
 
     Methods:
         handle(name: str, email: str, password: str, birthday_date: date,
-        curriculum: bytes) -> None:
+        curriculum: bytes, country_code: str, phone_number: str) -> None:
             Handles the user creation process by calling the service layer with the
             provided user data.
             If any errors occur (e.g., user already exists, domain errors), they are raised
@@ -44,6 +44,8 @@ class CreateUserController(CreateUserControllerInterface):
         password: str,
         birthday_date: date,
         curriculum: bytes,
+        country_code: str,
+        phone_number: str,
     ) -> None:
         dto = CreateUserDTO(
             name=name,
@@ -51,6 +53,8 @@ class CreateUserController(CreateUserControllerInterface):
             password=password,
             birthday_date=birthday_date,
             curriculum=curriculum,
+            country_code=country_code,
+            phone_number=phone_number,
         )
 
         result = self.__service.execute(dto)

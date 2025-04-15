@@ -28,12 +28,13 @@ class EditUserView(ViewInterface):
 
     def handle(self, http_request: HttpRequest) -> HttpResponse:
         edit_user_validator(http_request)
-
         identifier = http_request.params["identifier"]
         name = http_request.body.get("name", None)
         email = http_request.body.get("email", None)
         password = http_request.body.get("password", None)
         birthday_date_str = http_request.body.get("birthday_date", None)
+        country_code = http_request.body.get("country_code", None)
+        phone_number = http_request.body.get("phone_number", None)
 
         birthday_date = None
         if birthday_date_str:
@@ -51,6 +52,8 @@ class EditUserView(ViewInterface):
             password=password,
             birthday_date=birthday_date,
             curriculum=curriculum,
+            country_code=country_code,
+            phone_number=phone_number,
         )
 
         return HttpResponse(status_code=201, body=body_response)

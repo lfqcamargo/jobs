@@ -17,6 +17,8 @@ class EditUserDTO:
         password: Optional[str] = None,
         birthday_date: date = None,
         curriculum: bytes = None,
+        country_code: str = None,
+        phone_number: str = None,
     ) -> None:
         self.identifier = identifier
         self.name = name
@@ -24,3 +26,5 @@ class EditUserDTO:
         self.password = password
         self.birthday_date = birthday_date
         self.curriculum = curriculum
+        self.country_code = country_code
+        self.phone_number = phone_number

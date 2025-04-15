@@ -15,6 +15,8 @@ class CreateUserDTO:
         password: str,
         birthday_date: date,
         curriculum: bytes,
+        country_code: str,
+        phone_number: str,
         identifier: int = 0,
     ) -> None:
         self.identifier = identifier
@@ -23,3 +25,5 @@ class CreateUserDTO:
         self.password = password
         self.birthday_date = birthday_date
         self.curriculum = curriculum
+        self.country_code = country_code
+        self.phone_number = phone_number

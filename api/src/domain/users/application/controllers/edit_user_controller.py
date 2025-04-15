@@ -18,7 +18,8 @@ class EditUserController(EditUserControllerInterface):
 
     Methods:
         handle(identifier: int, name: str | None, email: str | None, password: str | None,
-               birthday_date: date | None, curriculum: bytes | None) -> None:
+               birthday_date: date | None, curriculum: bytes | None, country_code: str,
+               phone_number: str) -> None:
             Handles the user editing process by calling the service layer with the
             provided user data.
             If any errors occur (e.g., user not found, email conflict, domain errors),
@@ -48,6 +49,8 @@ class EditUserController(EditUserControllerInterface):
         password: str | None = None,
         birthday_date: date | None = None,
         curriculum: bytes | None = None,
+        country_code: str | None = None,
+        phone_number: str | None = None,
     ) -> None:
         dto = EditUserDTO(
             identifier=identifier,
@@ -56,6 +59,8 @@ class EditUserController(EditUserControllerInterface):
             password=password,
             birthday_date=birthday_date,
             curriculum=curriculum,
+            country_code=country_code,
+            phone_number=phone_number,
         )
 
         result = self.__service.execute(dto)
